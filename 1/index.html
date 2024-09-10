@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 1, coloring the Prokudin-Gorskii Photo Collection</title>
+    <style>
+        /* Add any custom CSS styles here */
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Project 1, coloring the Prokudin-Gorskii Photo Collection</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2>About the project</h2>
+            <p>The goal of the assignment is to take the digitized Prokudin-Gorskii glass plate images, and combine them into colored images. 
+                The images are taken in black and white, but each image is taken with a red, green, and blue filter. In order to do this, we need 
+                a method for automatically aligning the images, and then combine them into a single colored image. The method need to work
+                for all images. 
+            </p>
+            <h2>My method</h2>
+            <p>
+                For the small images, I used a simple method. First, I cropped the edges in all three images to remove the borders, which
+                often consits of black ares and/or noisy parts. Then, to account for the fact that the images use three different filters, resulting in
+                different brightness values, I normalized the pixel values. That makes it easier to compare the images, as the pixel values
+                are now insensitive to the overall brightness level. 
+            </p>
+            <p>
+                I then iterated over a displacemnet of -15 to 15 pixels in both x and y direction, and
+                calculated the sum of squared differences between the images. I used the blue image as the image to compare the other images to,
+                but that was random and I could have used any of the images. The displacement with the smallest sum of squared differences was
+                then used to align the images. Instead of using a rolling function, which will move an edge pixel to the other side of the image,
+                I made a function that moves all pixels in a direction (up, down, left or right), and then put zeros in the spots we are moving away from.
+                If f.ex. the function is called with a displacement of 3 in the x direction, all pixels in the image will be moved 3 pixels to the right, and
+                zeros will be put in the leftmost 3 columns. This make more sense, as I do not think it make sense that any pixels should be moved to
+                another side of the image. I then also put zeros in the corresponding pixels on the other image, as these pixels should be temporarily
+                ignored. Finally, I combined the three images according to the optimal displacement, and removed the part where only one or two images had a value.
+                The result for the small images were quite good, and the images aligned well.
+            </p>
+            <p>
+                Because the method were successfull for the small images, I  used the same method for the larger images. However, I
+                had to implement an image pyramid so that I could search over more than -15 to 15 displacements without the computation time
+                becoming too large. A larger displacement space was necessary because the images consist of more pixels. 
+                The image pyramid works by recursively downsampling the images with a factor 2 four times. When the function is at 
+                the coarsest level, the function searches for the optimal displacement in a -15 to 15 pixel range in the downsized image. It then return this
+                displacement, which is then used as a starting point to search for the optimal displacement in the next level. This is repeated until the function is at the
+                original image size, and the optimal displacement is then used to align the images.
+            </p>
+            <p>
+                I think the result for the large images were generally really good. However, for one of the images, the Emir, the red version is way out of
+                line with the other images. I think this could be becuase the coursest level for some reason finds a wrong optimal point, and that when 
+                the function then starts searching for the optimal displacement in the next level, it is searching around a wrong point. This could be because
+                the coursest level is simply too coarse. One solution could be to downsize the image one less time. However, as I wanted to implement some bells and whistles,
+                I instead implemented an edge detector. The edge detector works by using sobel filters to give each pixel a value based on the gradient of the image intensity, effectively giving
+                each pixel a value based on how much of an edge it is. I then used the same method as before, but instead of comparing the pixel values, I compared the edge values
+                between one default image and one image that is moved. This worked really well, and the result for the Emir image was much better. For the rest of the images,
+                the result was generally the same as before, but the edge detector made the images look a bit sharper.
+
+            </p>
+            
+        </section>
+
+        <section>
+            <h2>Low resolution images</h2>
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/cathedral.jpg" alt="Church" style="width: 100%; height: auto;">
+                <figcaption>Chatedral colored. Red disp: (3, 12). Green disp: (2, 5).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/monastery.jpg" alt="Emir" style="width: 100%; height: auto;">
+                <figcaption>Monastery colored. Red disp: (2, 3). Green disp: (2, -3).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/tobolsk.jpg" alt="Harvesters" style="width: 100%; height: auto;">
+                <figcaption>Tobolsk colored. Red disp: (3, 6). Green disp: (3, 3).</figcaption>
+            </figure>
+
+            <h2>High resolution images using RGB pixel values.</h2>
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/church_rgb.jpg" alt="Church" style="width: 100%; height: auto;">
+                <figcaption>Church colored. Red disp: (-4, 57). Green disp: (4, 24).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/emir_rgb.jpg" alt="Emir" style="width: 100%; height: auto;">
+                <figcaption>Emir colored. Red disp: (-465, 385). Green disp: (24, 49).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/harvesters_rgb.jpg" alt="Harvesters" style="width: 100%; height: auto;">
+                <figcaption>Harvesters colored. Red disp: (13, 124). Green disp: (17, 61).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/icon_rgb.jpg" alt="Icon" style="width: 100%; height: auto;">
+                <figcaption>Icon colored. Red disp: (23, 89). Green disp: (17, 41).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/lady_rgb.jpg" alt="Lady" style="width: 100%; height: auto;">
+                <figcaption>Lady colored. Red disp: (12, 115). Green disp: (8, 56).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/melons_rgb.jpg" alt="Melons" style="width: 100%; height: auto;">
+                <figcaption>Melons colored. Red disp: (13, 179). Green disp: (11, 85).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/onion_church_rgb.jpg" alt="Onion Church" style="width: 100%; height: auto;">
+                <figcaption>Onion Church colored. Red disp: (36, 108). Green disp: (27, 51).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/sculpture_rgb.jpg" alt="Sculpture" style="width: 100%; height: auto;">
+                <figcaption>Sculpture colored. Red disp: (-27, 140). Green disp: (-11, 33).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/self_portrait_rgb.jpg" alt="Self Portrait" style="width: 100%; height: auto;">
+                <figcaption>Self Portrait colored. Red disp: (37, 177). Green disp: (29, 79).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/three_generations_rgb.jpg" alt="Three Generations" style="width: 100%; height: auto;">
+                <figcaption>Three Generations colored. Red disp: (11, 112). Green disp: (14, 55).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/train_rgb.jpg" alt="Train" style="width: 100%; height: auto;">
+                <figcaption>Train colored. Red disp: (32, 89). Green disp: (6, 44).</figcaption>
+            </figure>
+
+            <h2>High resolution images using edge detector</h2>
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/church_colored.jpg" alt="Church" style="width: 100%; height: auto;">
+                <figcaption>Church colored. Red disp: (-4, 58). Green disp: (4, 25).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/emir_colored.jpg" alt="Emir" style="width: 100%; height: auto;">
+                <figcaption>Emir colored. Red disp: (40, 107). Green disp: (24, 49).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/harvesters_colored.jpg" alt="Harvesters" style="width: 100%; height: auto;">
+                <figcaption>Harvesters colored. Red disp: (13, 124). Green disp: (17, 60).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/icon_colored.jpg" alt="Icon" style="width: 100%; height: auto;">
+                <figcaption>Icon colored. Red disp: (23, 90). Green disp: (17, 42).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/lady_colored.jpg" alt="Lady" style="width: 100%; height: auto;">
+                <figcaption>Lady colored. Red disp: (13, 120). Green disp: (9, 56).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/melons_colored.jpg" alt="Melons" style="width: 100%; height: auto;">
+                <figcaption>Melons colored. Red disp: (13, 177). Green disp: (10, 80).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/onion_church.jpg" alt="Onion Church" style="width: 100%; height: auto;">
+                <figcaption>Onion Church colored. Red disp: (35, 107). Green disp: (25, 52).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/sculpture.jpg" alt="Sculpture" style="width: 100%; height: auto;">
+                <figcaption>Sculpture colored. Red disp: (-26, 140). Green disp: (-11, 33).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/self_portrait.jpg" alt="Self Portrait" style="width: 100%; height: auto;">
+                <figcaption>Self Portrait colored. Red disp: (37, 176). Green disp: (29, 78).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/three_generations.jpg" alt="Three Generations" style="width: 100%; height: auto;">
+                <figcaption>Three Generations colored. Red disp: (8, 111). Green disp: (12, 54).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/train.jpg" alt="Train" style="width: 100%; height: auto;">
+                <figcaption>Train colored. Red disp: (29, 86). Green disp: (2, 42).</figcaption>
+            </figure>
+
+            <h2>Images of my own choosing</h2>
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/fish.jpg" alt="Fish" style="width: 100%; height: auto;">
+                <figcaption>Fish colored. Red disp: (32, 120). Green disp: (24, 51).</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%;">
+                <img src="/Users/matswiigmartinussen/Documents/Berkeley/CS180/MatsStuben.github.io/1/Images/house.jpg" alt="House" style="width: 100%; height: auto;">
+                <figcaption>House colored. Red disp: (-35, 142). Green disp: (-16, 35).</figcaption>
+            </figure>
+
+        </section>
+    </main>
+</body>
+</html>
