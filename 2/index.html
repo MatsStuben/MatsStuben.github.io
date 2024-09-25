@@ -1,7 +1,405 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Project 2</title>
+    <title>Project 2, Fun with Filters and Frequencies!
+    </title>
     <style>
     </style>
 </head>
+
+<body>
+    <header>
+        <h1>Project 2, Fun with Filters and Frequencies!</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Part 1, fun with filters</h2>
+            <h3>Part 1.1, Finite Difference Operator </h3>
+            <p>The first part of the assignment is about using difference operators to detect edges on a grayscale image.
+                We have two difference operators, D_x and D_y. D_x is the matrix [-1, 1] and D_y is the matrix [-1, 1]^T.
+                When we convolve an image with D_x, we get a value of the difference between a pixel and the pixel to the left of it.
+                This essentially tells the derivative in the x-direction. A high derivative in the x-direction means that the pixel is likely a part of a vertical edge.
+                Similarly, when we convolve an image with D_y, we get a value that tells the derivative in the y-direction. A high derivative in the y-direction means that the pixel is likely a part of a horizontal edge.
+            </p>
+            <p>
+                We can combine these two operators to get the magnitude of the gradient of the image. This is done by taking the square root of the sum of the squares of the two operators.
+                This gives us a value that tells us how likely it is that a pixel is a part of an edge. We can then threshold this value to get a binary image that shows the edges of the original image.
+                The threshold was found by trial and error, and was set to 0.26.
+                The result of convolving with D_x, D_y, the magnitude of the gradient, and the binarized image are shown below.
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/edge_dx.png" alt="edge_dx" style="width: 100%; height: auto;">
+                <figcaption>Image convolved with dx.</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/edge_dy.png" alt="edge_dy" style="width: 100%; height: auto;">
+                <figcaption>Image convolved with dy.</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/edge_gradient.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Image convolved with the gradient.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/edge_gradient_binary.png" alt="edge_gradient_binary" style="width: 100%; height: auto;">
+                <figcaption>Image convolved with the gradient, binarized.</figcaption>
+            </figure>
+
+            <h3>Part 1.2, Derivative of Gaussian (DoG) Filter </h3>
+            <p>
+                To avoid detecting noise as edges, we can convolve with a Gaussian filter to smooth the image before convolving with the difference operators and the gradient.
+                The Guassian filter was used with a standard deviation of 1, and a kernel size of 6x6. The threshold was now set to 0.104.
+                The result of convolving the smoothed image with D_x, D_y, the magnitude of the gradient, and the binarized image are shown below.
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/edges_dx_smooth.png" alt="edge_dx" style="width: 100%; height: auto;">
+                <figcaption>Smoothed image convolved with dx.</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/edges_dy_smooth.png" alt="edge_dy" style="width: 100%; height: auto;">
+                <figcaption>Smoothed image convolved with dy.</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/edges_gradient_smooth.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Smoothed image convolved with the gradient.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/edges_gradient_smooth_binary.png" alt="edge_gradient_binary" style="width: 100%; height: auto;">
+                <figcaption>Smoothed image convolved with the gradient, binarized.</figcaption>
+            </figure>
+            <p>
+                As we can see, the edges are much clearer in the smoothed image. This is becuase the edges are now thicker becuase of the smoothing effect of the Gaussian filter.
+                Also, we can see that there are much less noise in the binarized image. This is becuase the noise was smoothed out by the Gaussian filter.
+            </p>
+            <p>
+                Instead of convolving the image with two different filters to obtain the edges in one direction, we can convolve the image with a single filter that is the derivative in one direction of the Gaussian filter.
+                In other words, we can convolve the Guassian filter with the difference operator, and then convolve the image with this new filter. This yields
+                the same result as convolving the image with the Gaussian filter and then the difference operator. The result convolving the image with the difference of the Gaussian filter is shown below.
+            </p>
+            <div style="text-align: center;">
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/edge_dx_smooth2.png" alt="edge_dx" style="width: 100%; height: auto;">
+                    <figcaption>Image convolved with the DoG in the x-direction.</figcaption>
+                </figure>
+                
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/edge_dy_smooth2.png" alt="edge_dy" style="width: 100%; height: auto;">
+                    <figcaption>Image convolved with the DoG in the y-direction.</figcaption>
+                </figure>
+                
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/edge_gradient_smooth2.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                    <figcaption>Image convolved with the gradient of the DoG.</figcaption>
+                </figure>
+                
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/edge_gradient_smooth_binary2.png" alt="edge_gradient_binary" style="width: 100%; height: auto;">
+                    <figcaption>Image convolved with the gradient of the DoG, binarized.</figcaption>
+                </figure>
+            </div>
+            <p>
+                As we can see, the result is more or less the same as convolving the image with the Gaussian filter and then the difference operator.
+            </p>
+            <h2>Part 2, Fun with Frequencies!</h2>
+            <h3>Part 2.1, Image Sharpening </h3>
+            <p>
+                The first part of the second task is about "sharpening" an image. This is done by adding more of the high frequencies to the image.
+                The high frequencies is found by talking the original image and subtracting the smoothed image (low-pass filtered image).
+            </p>
+
+            <p>
+                Here is the result of sharpening Taj Mahal with a sharpening factor of 1.6:
+            </p>
+            <div style="text-align: center;">
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/taj.png" alt="edge_dx" style="width: 100%; height: auto;">
+                    <figcaption>Origianl image of Taj.</figcaption>
+                </figure>
+                
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/taj_sharpened.png" alt="edge_dy" style="width: 100%; height: auto;">
+                    <figcaption>Sharpened image of Taj.</figcaption>
+                </figure>
+            
+            </div>
+            <p>
+                Here is the result of sharpening an old photo of me with a sharpening factor of 4:
+            </p>
+            <div style="text-align: center;">
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/me_kid.png" alt="edge_dx" style="width: 100%; height: auto;">
+                    <figcaption>Origianl image of me.</figcaption>
+                </figure>
+                
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/me_kid_sharpened.png" alt="edge_dy" style="width: 100%; height: auto;">
+                    <figcaption>Sharpened image of me.</figcaption>
+                </figure>
+            
+            </div>
+            <p>
+                Here is the result of blurring an image of the Berkeley tower, then resharpening it again:
+            </p>
+            <div style="text-align: center;">
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/berk_tower.png" alt="edge_dx" style="width: 100%; height: auto;">
+                    <figcaption>Origianl image of Berkeley tower.</figcaption>
+                </figure>
+                
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/berk_tower_smooth.png" alt="edge_dy" style="width: 100%; height: auto;">
+                    <figcaption>Blurred image of Berkeley tower.</figcaption>
+                </figure>
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/berk_tower_resharpened.png" alt="edge_dy" style="width: 100%; height: auto;">
+                    <figcaption>Resharpened image of Berkeley tower.</figcaption>
+                </figure>
+            
+            </div>
+            <h3>Part 2.2, Hybrid Images </h3>
+            <p>
+                The second part of the second task is about creating hybrid images. This is done by combining the low frequencies of one image with the high frequencies of another image.
+                The low frequencies is found by taking the smoothed image of the first image, and the high frequencies is found by taking the original image and subtracting the smoothed image.
+                The hybrid image is then created by adding the low frequencies of the first image with the high frequencies of the second image. Here are the result on three different hybrid images:
+            </p>
+            <h4>Favourite hybrid, Messi and Ronaldo.</h4>
+            <p>
+                What I liked most about this hybrid is that not only does Ronaldo change into Messi, but the Real Madrid logo and the Adidas logo on the shirt also changes into the Barcelona logo and the Nike logo.
+            </p>
+            <div style="text-align: center;">
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/ronaldo.jpg" alt="edge_dx" style="width: 100%; height: auto;">
+                    <figcaption>Image of Ronaldo.</figcaption>
+                </figure>
+                
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/MESSI.jpg" alt="edge_dy" style="width: 100%; height: auto;">
+                    <figcaption>Image of Messi.</figcaption>
+                </figure>
+                
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/Messi_Ronaldo.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                    <figcaption>Hybrid of Messi and Ronaldo.</figcaption>
+                </figure>
+                
+            </div>
+            <h4>Frequency analysis of the Ronaldo and Messi images:</h4>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/ronaldo_freq_org.png" alt="edge_dx" style="width: 100%; height: auto;">
+                <figcaption>Frequency of Ronaldo.</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/ronaldo_freq_flt.png" alt="edge_dy" style="width: 100%; height: auto;">
+                <figcaption>Frequncy of high pass filtered Ronaldo.</figcaption>
+            </figure>
+            
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/messi_freq_org.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Frequency of Messi.</figcaption>
+            </figure>
+
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/messi_freq_flt.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Frequency of low pass filtered Messi.</figcaption>
+            </figure>
+
+            <h4>Another hybrid, an egg and a porcupine.</h4>
+            <div style="text-align: center;">
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/egg.jpg" alt="edge_dx" style="width: 100%; height: auto;">
+                    <figcaption>Image of an egg.</figcaption>
+                </figure>
+                
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/piggsvin.jpg" alt="edge_dy" style="width: 100%; height: auto;">
+                    <figcaption>Image of a porcupine.</figcaption>
+                </figure>
+                
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/egg_per.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                    <figcaption>Hybrid of egg and porcupine.</figcaption>
+                </figure>
+            </div>
+
+                <h4>Bad hybrid, football and basketball</h4>
+                <p>
+                    This hybrid did not work very well, as the football is always by far the most visible. I think this is because the
+                    black pacthes, which have a low frequency, is so dominant that even when you look closely, you can't see the basketball very well. 
+                    However, you can see the contours of the basketball when looking closely, while it is not visible from a distance, so it was not a
+                    complete failure.
+                </p>
+                <div style="text-align: center;">
+                    <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                        <img src="Images/football2.jpg" alt="edge_dx" style="width: 100%; height: auto;">
+                        <figcaption>Image of football.</figcaption>
+                    </figure>
+                    
+                    <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                        <img src="Images/basketball.jpeg" alt="edge_dy" style="width: 100%; height: auto;">
+                        <figcaption>Image of basketball.</figcaption>
+                    </figure>
+                    
+                    <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                        <img src="Images/football_basketball.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                        <figcaption>Hybrid of football and basketball.</figcaption>
+                    </figure>
+
+            <h3>Part 2.3, Gaussian and Laplacian Stacks </h3>
+            <p>
+                The third part of the second task is about creating Gaussian and Laplacian stacks. This is done by creating a stack of images where each image is the result of convolving the last image with a Guassian.
+                The Laplacian stack is then created by taking the difference between the Gaussian stack and the stack shifted one step down. Here are the results of the Gaussian and Laplacian stacks of an apple and an orange (sigma = 3 for all stacks, levels = 5 for all stacks):
+            </p>
+            <h4>Gaussian stack of the apple:</h4>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/apple_gaus1.png" alt="edge_dx" style="width: 100%; height: auto;">
+            </figure>
+            
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/apple_gaus2.png" alt="edge_dy" style="width: 100%; height: auto;">
+            </figure>
+            
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/apple_gaus3.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/apple_gaus4.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/apple_gaus5.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+
+            <h4>Gaussian stack of the orange:</h4>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/orange_gaus1.png" alt="edge_dx" style="width: 100%; height: auto;">
+            </figure>
+            
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/orange_gaus2.png" alt="edge_dy" style="width: 100%; height: auto;">
+            </figure>
+            
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/orange_gaus3.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/orange_gaus4.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/orange_gaus5.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+
+            <h4>Laplacian stack of the apple:</h4>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/apple_lap1.png" alt="edge_dx" style="width: 100%; height: auto;">
+            </figure>
+            
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/apple_lap2.png" alt="edge_dy" style="width: 100%; height: auto;">
+            </figure>
+            
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/apple_lap3.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/apple_lap4.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/apple_gaus5.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+
+            <h4>Laplacian stack of the orange:</h4>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/orange_lap1.png" alt="edge_dx" style="width: 100%; height: auto;">
+            </figure>
+            
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/orange_lap2.png" alt="edge_dy" style="width: 100%; height: auto;">
+            </figure>
+            
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/orange_lap3.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/orange_lap4.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/orange_lap5.png" alt="edge_gradient" style="width: 100%; height: auto;">
+            </figure>
+            <p>
+                The laplacian stack work as a band pass filter, where the first image contains the highest frequencies, and the last image contains the lowest frequencies.
+                We can use these band pass fitlers to combine two images. Each layer in the Laplacian stack of the two images is combined by taking a weighted average
+                of the two images around the center of the image. Then we add all the layers together. The result of combining the apple and the orange Laplace stack is shown below:
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/orapple1.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Combining two images using blending.</figcaption>
+
+            </figure>
+
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/orapple_unmasked.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Combining two images without blending.</figcaption>
+            </figure>
+            <h3>Part 2.4, Multiresolution Blending </h3>
+            <p>
+                The fourth part of the second task is about blending two images using the laplacian stacks together with a Guassian stack of
+                a blending mask. The blending mask could have any shape, but for the first two images, it is a straight line on the center of the image.
+                Here is the result on the orapple from the last task (sigma = 3 for the Laplacian stacks, sigma = 20 for the Gaussian stack, 5 levels for both):
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/orapple_mask.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Combining orange and apple images using blending, different approach.</figcaption>
+            </figure>
+            <p>
+                Then, I used the blending technique on two images of the same forrest. One is taken during the summer, the other
+                is taken during the fall. Some of the image is black becaused I used the 
+                allignemnt function to properly aligne the two images. The result of the bledning on two pictures of a forrest,
+                one taking during summer and the other during automn is shown here (sigma = 3 for the Laplacian stacks, sigma = 20 for the Gaussian stack, 5 levels for both):
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/forrest_blended.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Combining two images of a forrest using blending.</figcaption>
+            </figure>
+            <p>
+                The result looks much better than simply combining them on the center without doing any blending:
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/forrest_bad_blended.png" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Combining two images without using blending.</figcaption>
+            </figure>
+            <p>
+                The multiresolution blending approach does not require the mask to be a step function in the center of the image. It can also be an 
+                irregular mask, so that you can blend in f.ex. a small figure into another image. Here is an example of blending Lionel Messi's face into the 
+                head of a goat (becuase he is the goat - greatest of all time), along with the mask that was used (sigma = 3 for the Laplacian stacks, sigma = 5 for the Gaussian stack, 5 levels for both):
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/Messi_goat.jpg" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Messi blended into the head of a goat.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/mask.jpg" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Mask that was used to blend in Messi.</figcaption>
+            </figure>
+            <p>
+                The result is much better than simply pasting Messi's face on top of the goat's head by using the mask only one time, 
+                without using the Guassian stack of the mask and the Laplacian stacks of the images.
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/Messi_goat_bad.jpg" alt="edge_gradient" style="width: 100%; height: auto;">
+                <figcaption>Messi head onto thes head of a goat, no blending.</figcaption>
+            </figure>
+        </section>
+    </main>
+</body>
+</html>
