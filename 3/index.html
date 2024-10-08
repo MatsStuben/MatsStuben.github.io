@@ -2,6 +2,10 @@
 <html>
 <head>
     <title>Project 3, Face Morphing</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
     </style>
 </head>
@@ -15,7 +19,7 @@
             <p> 
                 In this project, we were tasked with creating a face morphing application. 
                 The first step in this process was to define correspondences between two images, which 
-                was done by manually selecting points on the two images that corresponded to each other. this
+                was done by manually selecting points on the two images that corresponded to each other. This
                 was done by using the tool made by a previous student that was linked in the project description.
                 The picture of me and Clooney together with the data points are shown below.
             </p>
@@ -35,11 +39,43 @@
             <h2>Computing the "Mid-way Face"</h2>
             <p>
                 The next process was to compute the "mid-way face" between the two images. This is done by warping the two images
-                onto the average image, then averaging the colors of the two morphed images. 
+                onto the average image, then averaging the colors of the two morphed images on the average image. 
                 The images are warped to the average image triangle by triangle. Each triangle from the original images is warped
                 to the corresponding triangle in the average image by applying an affine transformation matrix.
-                The transformation matrix si found by soling a set of linear equations. 
+                The transformation matrix is found by soling the following set of linear equations:
 
+            </p>
+            <p>
+                \[
+                \begin{bmatrix}
+                x_1 & y_1 & 1 & 0 & 0 & 0 \\
+                0 & 0 & 0 & x_1 & y_1 & 1 \\
+                x_2 & y_2 & 1 & 0 & 0 & 0 \\
+                0 & 0 & 0 & x_2 & y_2 & 1 \\
+                x_3 & y_3 & 1 & 0 & 0 & 0 \\
+                0 & 0 & 0 & x_3 & y_3 & 1
+                \end{bmatrix}
+                \begin{bmatrix}
+                a \\
+                b \\
+                c \\
+                d \\
+                e \\
+                f
+                \end{bmatrix}
+                =
+                \begin{bmatrix}
+                x_1' \\
+                y_1' \\
+                x_2' \\
+                y_2' \\
+                x_3' \\
+                y_3'
+                \end{bmatrix}
+                \]
+            </p>
+            <p>
+                Where (x1, y1) corresponds to a point in the original image, and (x1', y1') corresponds to the same point in the average image.
             </p>
             <p>
                 To then find the pixel values on the mean image, we use the inverse of the transformation matrix.
@@ -53,14 +89,22 @@
                 <img src="Images/mid_way_face.png" alt="mid_way_face" style="width: 100%; height: auto;">
                 <figcaption>Mid way face between me and Clooney.</figcaption>
             </figure>
-
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/george_small_copy.jpg" alt="mid_way_face" style="width: 100%; height: auto;">
+                <figcaption>Original image of Clooney.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/file_copy.jpg" alt="mid_way_face" style="width: 100%; height: auto;">
+                <figcaption>Original image of me.</figcaption>
+            </figure>
             <h2>The morph sequence</h2>
             <p>
-                The final step was to create a morph sequence between the two images. This is done by computing a series of intermediate
-                images between the two images. The intermediate images are created by computing both the weighted average shape and color.
-                The weight is determined by the parameter alpha. Alpha = 0.25 means that the image is 25% the shape and color of one image,
-                and 75% the shape and color of another image. This essentialy mean that the mid-way points are 0.25*image1 + 0.75*image2,
-                and the same applies for the pixel values. The morph sequence is shown below. NB, you need to refresh the page to see the animation.
+                The next step was to create a morph sequence between the two images. This is done by computing a series of intermediate
+                images between the two original images. The intermediate images are created by computing both the weighted average shape and color.
+                The weight is determined by the parameters wrap_frac and dissolve_frac. wrap_frac = 0.25 means that the image is 25% the shape and color of one image,
+                and 75% the shape and color of another image. This essentialy mean that the mid-way points are 0.25*image1 + 0.75*image2. 
+                The same applies for dissolve_frac, just that it decides the pixel-mix instead of shape. The morph sequence is shown below.
+                NB, you need to refresh the page to see the animation.
             </p>
             <figure style="display: inline-block; width: 20%; margin: 0 1%;">
                 <img src="Images/morph_animation.gif" alt="morph_animation" style="width: 100%; height: auto;">
@@ -70,17 +114,25 @@
             <h2>The "Mean face" of a population</h2>
             <p>
                 The next part of the project was to compute the "mean face" of a population. This was done by computing the average of the 
-                shapes and colors of all the images in the population. I used the images from <a href="https://fei.edu.br/~cet/facedatabase.html"> this link</a>
-                to find the mean face. To find the mean image, I first found the mean shape by averaging the points of all the images. I then
-                found the mean triangulation of the mean shape. I then warped all the images to the mean shape, and averaged the pixel values in the same way
-                as I did for the mid-way face of Clooney and me. The mean face is shown below.
+                shapes and colors of all the images in the population. I used the images from the database frontalimages_manuallyaligned_part1 frontalimages_manuallyaligned_part1 from 
+                 <a href="https://fei.edu.br/~cet/facedatabase.html"> this link</a>.
+                To find the mean image, I first found the mean shape by averaging the points of all the images. I then
+                found the triangulation of the mean shape. Then, I looped over all the images, found the transformation matrix from the original images
+                to the mean images, and then applied the inverse transformation matrix from the mean image to the original image to find the pixel values.
+                I used the same interpolation method as before to find the pixel values. I summed all the pixel values and divided by the number of images to 
+                find the mean image.
+                The mean face is shown below.
             </p>
             <figure style="display: inline-block; width: 20%; margin: 0 1%;">
                 <img src="Images/mean_population.png" alt="mean_population" style="width: 100%; height: auto;">
                 <figcaption>Mean face of a population.</figcaption>
             </figure>
             <p>
-                Here is a collection of some of the images from the population and the images warped to the average shape:
+                Here is a collection of some of the images from the population and the images warped to the average shape. As you can see,
+                when the triangles form sharp angles, the warping leads to some visible lines along the line of the triangles. This
+                is probably becuase the boundary pixels of adjacent triangles are not exactly the same due to rounding errors. If f.ex two triangles 
+                overlap, the overlapping pixels will be averaged twice, leading to a visible white line. If there is a gap, then there will be no 
+                averaging, leading to a visible black line.
             </p>
             <figure style="display: inline-block; width: 20%; margin: 0 1%;">
                 <img src="Images/man1_warped.png" alt="mean_population" style="width: 100%; height: auto;">
@@ -96,7 +148,7 @@
             </figure>
             <figure style="display: inline-block; width: 20%; margin: 0 1%;">
                 <img src="Images/8a.jpg" alt="mean_population" style="width: 100%; height: auto;">
-                <figcaption>Man 1 original.</figcaption>
+                <figcaption>Man 2 original.</figcaption>
             </figure>
             <figure style="display: inline-block; width: 20%; margin: 0 1%;">
                 <img src="Images/man3_warped.png" alt="mean_population" style="width: 100%; height: auto;">
@@ -104,7 +156,7 @@
             </figure>
             <figure style="display: inline-block; width: 20%; margin: 0 1%;">
                 <img src="Images/10a.jpg" alt="mean_population" style="width: 100%; height: auto;">
-                <figcaption>Man 1 original.</figcaption>
+                <figcaption>Man 3 original.</figcaption>
             </figure>
         </section>
         <p>
@@ -125,7 +177,8 @@
         <h2>Caricatures: Extrapolating from the mean</h2>
         <p>
             The final part of the project was to create a caricatur of my face by extrapolating from the mean face of the population.
-            This was done by computing the difference between my face and the mean face, and then adding a multiple (alpha) of this difference to the mean face.
+            This was done by computing the difference between points on my face and points on the mean face, and then adding a multiple (alpha) of this difference to the points from my face, and 
+            use this as the shape of the caricature.
             The carricatures with alpha betweeen -1.5 and 1.5 is shown below.
         </p>
         <figure style="display: inline-block; width: 20%; margin: 0 1%;">
@@ -161,15 +214,15 @@
         </p> 
         <figure style="display: inline-block; width: 20%; margin: 0 1%;">
             <img src="Images/me_morph_color.png" alt="mean_population" style="width: 100%; height: auto;">
-            <figcaption>Alpha = 0.5, only morphing appereance.</figcaption>
+            <figcaption>Dissolve_frac = 0.5, only morphing color.</figcaption>
         </figure>
         <figure style="display: inline-block; width: 20%; margin: 0 1%;">
             <img src="Images/me_morph_shape.png" alt="mean_population" style="width: 100%; height: auto;">
-            <figcaption>Alpha = 0.5, only morphing color.</figcaption>
+            <figcaption>Warp_frac = 0.5, only morphing shape.</figcaption>
         </figure>
         <figure style="display: inline-block; width: 20%; margin: 0 1%;">
             <img src="Images/me_morph_both.png" alt="mean_population" style="width: 100%; height: auto;">
-            <figcaption>Alpha = 0.5, morphing both color and appereance.</figcaption>
+            <figcaption>Warp_frac = dissolve_frac = 0.5, morphing both color and appereance.</figcaption>
         </figure>
 
     </main>
