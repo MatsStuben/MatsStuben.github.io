@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 3, Face Morphing</title>
+    <style>
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Project 3, Face Morphing</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Defining Correspondences.</h2>
+            <p> 
+                In this project, we were tasked with creating a face morphing application. 
+                The first step in this process was to define correspondences between two images, which 
+                was done by manually selecting points on the two images that corresponded to each other. this
+                was done by using the tool made by a previous student that was linked in the project description.
+                The picture of me and Clooney together with the data points are shown below.
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/points_clooney_me.png" alt="points_clooney_me" style="width: 100%; height: auto;">
+                <figcaption>Points marked on images of Clooney and me.</figcaption>
+            </figure>
+            <p>
+                I then calculated the mean of the points from the two images. Then I used the Delanuay function from 
+                scipy to calculate the triangulation of the mean points. The mean triangulation is shown below.
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/Mean_triangulation.png" alt="points_clooney_me" style="width: 100%; height: auto;">
+                <figcaption>Mean triangulation.</figcaption>
+            </figure>
+
+            <h2>Computing the "Mid-way Face"</h2>
+            <p>
+                The next process was to compute the "mid-way face" between the two images. This is done by warping the two images
+                onto the average image, then averaging the colors of the two morphed images. 
+                The images are warped to the average image triangle by triangle. Each triangle from the original images is warped
+                to the corresponding triangle in the average image by applying an affine transformation matrix.
+                The transformation matrix si found by soling a set of linear equations. 
+
+            </p>
+            <p>
+                To then find the pixel values on the mean image, we use the inverse of the transformation matrix.
+                The inverse of the transformation matrix will take us from a pixel in the mean image to a pixel in the image
+                correspodning to the transformation matrix. However, we may land between pixels(at most between 4 pixels). To solve this,
+                we use bilinear interpolation to find the pixel value. That is essentialy a weighted average of the pixels,
+                where the weights are the distance to the pixel. Finally, to compute the mid-way face, we average the pixel values
+                of the two images. The mid-way face is shown below.
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/mid_way_face.png" alt="mid_way_face" style="width: 100%; height: auto;">
+                <figcaption>Mid way face between me and Clooney.</figcaption>
+            </figure>
+
+            <h2>The morph sequence</h2>
+            <p>
+                The final step was to create a morph sequence between the two images. This is done by computing a series of intermediate
+                images between the two images. The intermediate images are created by computing both the weighted average shape and color.
+                The weight is determined by the parameter alpha. Alpha = 0.25 means that the image is 25% the shape and color of one image,
+                and 75% the shape and color of another image. This essentialy mean that the mid-way points are 0.25*image1 + 0.75*image2,
+                and the same applies for the pixel values. The morph sequence is shown below. NB, you need to refresh the page to see the animation.
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/morph_animation.gif" alt="morph_animation" style="width: 100%; height: auto;">
+                <figcaption>Morph_animation from clooney to me.</figcaption>
+            </figure>
+
+            <h2>The "Mean face" of a population</h2>
+            <p>
+                The next part of the project was to compute the "mean face" of a population. This was done by computing the average of the 
+                shapes and colors of all the images in the population. I used the images from <a href="https://fei.edu.br/~cet/facedatabase.html"> this link</a>
+                to find the mean face. To find the mean image, I first found the mean shape by averaging the points of all the images. I then
+                found the mean triangulation of the mean shape. I then warped all the images to the mean shape, and averaged the pixel values in the same way
+                as I did for the mid-way face of Clooney and me. The mean face is shown below.
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/mean_population.png" alt="mean_population" style="width: 100%; height: auto;">
+                <figcaption>Mean face of a population.</figcaption>
+            </figure>
+            <p>
+                Here is a collection of some of the images from the population and the images warped to the average shape:
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/man1_warped.png" alt="mean_population" style="width: 100%; height: auto;">
+                <figcaption>Man 1 warped.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/1a.jpg" alt="mean_population" style="width: 100%; height: auto;">
+                <figcaption>Man 1 original.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/man2_warped.png" alt="mean_population" style="width: 100%; height: auto;">
+                <figcaption>Man 2 warped.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/8a.jpg" alt="mean_population" style="width: 100%; height: auto;">
+                <figcaption>Man 1 original.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/man3_warped.png" alt="mean_population" style="width: 100%; height: auto;">
+                <figcaption>Man 3 warped.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/10a.jpg" alt="mean_population" style="width: 100%; height: auto;">
+                <figcaption>Man 1 original.</figcaption>
+            </figure>
+        </section>
+        <p>
+            Here is an image of my face warped into the average face of the population:
+        </p>
+        <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+            <img src="Images/me_average_pop.png" alt="mean_population" style="width: 100%; height: auto;">
+            <figcaption>My face warped into the avearge of the population.</figcaption>
+        </figure>
+        <p>
+            Here is an image of my the average face warped into my face:
+        </p>
+        <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+            <img src="Images/average_warped2me.png" alt="mean_population" style="width: 100%; height: auto;">
+            <figcaption>Average face warped into my face</figcaption>
+        </figure>
+
+        <h2>Caricatures: Extrapolating from the mean</h2>
+        <p>
+            The final part of the project was to create a caricatur of my face by extrapolating from the mean face of the population.
+            This was done by computing the difference between my face and the mean face, and then adding a multiple (alpha) of this difference to the mean face.
+            The carricatures with alpha betweeen -1.5 and 1.5 is shown below.
+        </p>
+        <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+            <img src="Images/min1_5.png" alt="min1_5" style="width: 100%; height: auto;">
+            <figcaption>Alpha = -1.5</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+            <img src="Images/min1.png" alt="mean_population" style="width: 100%; height: auto;">
+            <figcaption>Alpha = -1</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+            <img src="Images/min0_5.png" alt="mean_population" style="width: 100%; height: auto;">
+            <figcaption>Alpha = -0.5</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+            <img src="Images/0_5.png" alt="mean_population" style="width: 100%; height: auto;">
+            <figcaption>Alpha = 0.5</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+            <img src="Images/1.png" alt="mean_population" style="width: 100%; height: auto;">
+            <figcaption>Alpha = 1</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+            <img src="Images/1_5.png" alt="mean_population" style="width: 100%; height: auto;">
+            <figcaption>Alpha = 1.5</figcaption>
+        </figure>
+        <h2>Bells and whistles:</h2>
+        <p>
+            I added a Bells and whistles to the project. I found the average face of a chinese mean 
+       <a href="https://no.pinterest.com/pin/1018024690745785259/"> here</a>
+            I then morphed my face into the average chinese face. I morphed just the shape, just the apperance and a combination of both.
+            For each example, I used a morphing value of 0.5. The morphed images are shown below.
+        </p> 
+        <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+            <img src="Images/me_morph_color.png" alt="mean_population" style="width: 100%; height: auto;">
+            <figcaption>Alpha = 0.5, only morphing appereance.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+            <img src="Images/me_morph_shape.png" alt="mean_population" style="width: 100%; height: auto;">
+            <figcaption>Alpha = 0.5, only morphing color.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+            <img src="Images/me_morph_both.png" alt="mean_population" style="width: 100%; height: auto;">
+            <figcaption>Alpha = 0.5, morphing both color and appereance.</figcaption>
+        </figure>
+
+    </main>
+</body>
+</html>
