@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 4, IMAGE WARPING and MOSAICING</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Project 4</h1>
+    </header>
+    <main>
+        <section>
+            <h2>IMAGE WARPING and MOSAICING</h2>
+            <h3>Part A</h3>
+            <h4>Shoot the Pictures</h4>
+            <p>Part A of this assignment  consist of two tasks. The first part is about performing rectification of images.
+                I used three different images capturing different shapes (two different rectangular shapes and one quadratic)
+                and the pictures were taken from different angles. 
+                The images used for rectification are shown below: </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/Picture.jpg" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Quadratic picture.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/remarkable.jpg" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Picture of a Remarkable with rectangular shape.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/Drawing.jpg" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Picture of a drawing of a smileyface with rectangular shape.</figcaption>
+            </figure>
+
+            <p>The second part of part A is about blending images into a mosaic. For this part, I used two images of the front of
+                the International House to create one mosaic, and two images of the side of the International House to create another
+                mosaic. When taking the images, it is important that the center of projection are the same for all images that are blended
+                into the same mosaic. Also, the images in this task should overlap by 40% to 70%.
+                The images used for the mosaic are shown below:</p>
+            </p>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/Im_front.jpg" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Picture 1 of the front of International House.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/Im_right.jpg" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Picture 2 of the front of International House.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/Front_I.jpg" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Picture 1 of the side of International House.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/Right_I.jpg" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Picture 2 of the side of International House.</figcaption>
+            </figure>
+
+            <h4>Recover Homographies</h4>
+            <p>
+                Rectification involves warping an image that contains a known shape, such as a rectangle, which may appear distorted when projected onto a 2D image. 
+                The goal is to map this distorted shape back onto a reference frame where it is correctly aligned, for example, mapping the corners of a distorted
+                rectangle to the points [0,0], [1,0], [1,1], [0,1] which define a square or rectangle.
+                This process is achieved using homography, a transformation that relates the distorted shape in the image to the reference shape. To apply homography,
+                 we need to compute the homography matrix by solving a set of equations based on point correspondences between the distorted shape and the reference frame.
+                The homography matrix allows us to warp the image so that the shape appears undistorted and aligned as expected. The set of equations are shown here:</p>
+                <p>
+                    \[
+                    \begin{bmatrix}
+                    wx' \\
+                    wy' \\
+                    w
+                    \end{bmatrix}
+                    =
+                    \begin{bmatrix}
+                    a & b & c \\
+                    d & e & f \\
+                    g & h & i
+                    \end{bmatrix}
+                    \begin{bmatrix}
+                    x \\
+                    y \\
+                    1
+                    \end{bmatrix}
+                    \]
+                </p>
+                <p>we can set 𝑖=1 because homographies are defined up to a scale, meaning the transformation remains valid if the entire matrix is scaled by a constant factor. By setting 
+                    𝑖=1, we normalize the matrix, reducing the degrees of freedom from 9 to 8. That means we need 8 equations to solve the equations and obtain the matrix. To get these 8
+                    equations, we can manually click on 4 corresponding points on the two images we are using. This yields 8 equaitons since each point contains one x and one y value.
+                    However, with only 4 points, the system becomes very sensitive to noise. It is therefore better to use more than 4 points, which yields an overdetermined system. 
+                    In such cases, we cannot solve the system exactly, but we can find an approximate solution using least squares optimization, which is what I did.</p>
+                <h4>Warp the Images</h4>
+                <p>With the homography matrix, we can now warp an image onto another image plane. To do this I used inverse warping, where I mapped from the image plane we are warping onto
+                    to the original image. I then used bilinear interpolation when pixels where mapped between pixels in the original image. To perform the inverse warping we first need to make
+                    an empty image, and then we need to know which size the image is going to get. This is done by warping the corners of the original image onto the other image plane. 
+                </p>
+                <h4>Image Rectification</h4>
+                <p>When we have the image warping funcition, we can test it by performing image rectification. To do this we need to know the actual shape of the rectangulars, 
+                    and then use this shape as the image plane we are warping the images onto. This was done on the three images shown above. The results are shown below:</p>
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/picture_rect.jpg" alt="picture" style="width: 100%; height: auto;">
+                    <figcaption>Quadratic picture rectified.</figcaption>
+                </figure>
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/remarkable_rect.jpg" alt="remarkable" style="width: 100%; height: auto;">
+                    <figcaption>Remarkable rectified.</figcaption>
+                </figure>
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/drawing_rect.jpg" alt="drawing" style="width: 100%; height: auto;">
+                    <figcaption>Drawing rectified.</figcaption>
+                </figure>
+                <p>The result was very good, as we can see that all three images unnderwent a correct "rectification". However we 
+                    can also see from the drawing that the interpolation is not perfect, as the smileeyface is not completely recovered.
+                    However, since the lines on the smileyface is very thin, I think this is acceptable.
+                </p>
+                <h4>Blend the images into a mosaic</h4>
+                <p>Now that we have confirmed that the homography work as it should, and that it is possible to war an image onto another image plane,
+                    it is time to blend the images into a mosaic. This was done on the two images of the front of the International House, and the two images of the side of the International House.
+                    Since the images overlap by 40%-70%, we need to blend the images where they intersect. I did this by finding the intersection of the two images, and then 
+                    I blended the images by creating a mask that included 100% of the first image on the side of the intersection that was closest to the first image, and then gradually
+                    decreased this to 0% (increasing the influence of the other image) as the intersection moved towards the other image. The results are shown below:</p>
+                </p>
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/mosaic_front.jpg" alt="picture" style="width: 100%; height: auto;">
+                    <figcaption>Mosaic of the front of International House.</figcaption>
+                </figure>
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/blender_front.png" alt="remarkable" style="width: 100%; height: auto;">
+                    <figcaption>The bledning mask that was used to blend the two images of the front of International House</figcaption>
+                </figure>
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/mosaic_side.jpg" alt="drawing" style="width: 100%; height: auto;">
+                    <figcaption>Mosaic of the side of International House.</figcaption>
+                </figure>
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/blender_side.png" alt="drawing" style="width: 100%; height: auto;">
+                    <figcaption>The blending mask that was used to blend the two images of the side of International Houses.</figcaption>
+                </figure>
+                <p>The results were quite good, and I managed to succesfully blend two images into two different mosaics.
+                    We can see that the blending procedure is good but not ideal, as it results in some artifacts. This is because the
+                    shape of the intersection is not perfect, as it should be a trapezoid instead of a rectangle. This will be fixed in part B 
+                    of the assignment.
+                </p>
+    </main>
+</body>
+</html>
