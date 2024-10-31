@@ -20,7 +20,7 @@
             <h4>Shoot the Pictures</h4>
             <p>Part A of this assignment  consist of two tasks. The first part is about performing rectification of images.
                 I used three different images capturing different shapes (two different rectangular shapes and one quadratic)
-                and the pictures were taken from different angles. 
+                The pictures were also taken from different angles. 
                 The images used for rectification are shown below: </p>
             <figure style="display: inline-block; width: 20%; margin: 0 1%;">
                 <img src="Images/Picture.jpg" alt="picture" style="width: 100%; height: auto;">
@@ -36,8 +36,8 @@
             </figure>
 
             <p>The second part of part A is about blending images into a mosaic. For this part, I used two images of the front of
-                the International House to create one mosaic, and two images of the side of the International House to create another
-                mosaic. When taking the images, it is important that the center of projection are the same for all images that are blended
+                the International House to create one mosaic, two images of the side of the International House to create another
+                mosaic, and two images of Hilgard Hall on campus to create a third mosaic. When taking the images, it is important that the center of projection are the same for all images that are blended
                 into the same mosaic. Also, the images in this task should overlap by 40% to 70%.
                 The images used for the mosaic are shown below:</p>
             </p>
@@ -56,6 +56,14 @@
             <figure style="display: inline-block; width: 20%; margin: 0 1%;">
                 <img src="Images/Right_I.jpg" alt="drawing" style="width: 100%; height: auto;">
                 <figcaption>Picture 2 of the side of International House.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/Campus_front.jpg" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Picture 1 of Hilgard Hall.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                <img src="Images/Campus_right.jpg" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Picture 2 of Hilgard Hall.</figcaption>
             </figure>
 
             <h4>Recover Homographies</h4>
@@ -92,9 +100,9 @@
                     However, with only 4 points, the system becomes very sensitive to noise. It is therefore better to use more than 4 points, which yields an overdetermined system. 
                     In such cases, we cannot solve the system exactly, but we can find an approximate solution using least squares optimization, which is what I did.</p>
                 <h4>Warp the Images</h4>
-                <p>With the homography matrix, we can now warp an image onto another image plane. To do this I used inverse warping, where I mapped from the image plane we are warping onto
-                    to the original image. I then used bilinear interpolation when pixels where mapped between pixels in the original image. To perform the inverse warping we first need to make
-                    an empty image, and then we need to know which size the image is going to get. This is done by warping the corners of the original image onto the other image plane. 
+                <p>With the homography matrix, we can now warp an image onto another image plane. To do this I used inverse warping, where I mapped from the new image plane we are warping onto
+                    back to the original image using the inverse of the homography matrix. I then used bilinear interpolation when pixels where mapped between pixels in the original image. To perform the inverse warping we first need to make
+                    an empty image, and then we need to know which size the image is going to get. This is done by warping the corners of the original image onto the other image plane.</p>
                 </p>
                 <h4>Image Rectification</h4>
                 <p>When we have the image warping funcition, we can test it by performing image rectification. To do this we need to know the actual shape of the rectangulars, 
@@ -111,16 +119,16 @@
                     <img src="Images/drawing_rect.jpg" alt="drawing" style="width: 100%; height: auto;">
                     <figcaption>Drawing rectified.</figcaption>
                 </figure>
-                <p>The result was very good, as we can see that all three images unnderwent a correct "rectification". However we 
+                <p>The result was good, as we can see that all three images unnderwent a correct "rectification". However we 
                     can also see from the drawing that the interpolation is not perfect, as the smileeyface is not completely recovered.
                     However, since the lines on the smileyface is very thin, I think this is acceptable.
                 </p>
                 <h4>Blend the images into a mosaic</h4>
                 <p>Now that we have confirmed that the homography work as it should, and that it is possible to war an image onto another image plane,
-                    it is time to blend the images into a mosaic. This was done on the two images of the front of the International House, and the two images of the side of the International House.
-                    Since the images overlap by 40%-70%, we need to blend the images where they intersect. I did this by finding the intersection of the two images, and then 
-                    I blended the images by creating a mask that included 100% of the first image on the side of the intersection that was closest to the first image, and then gradually
-                    decreased this to 0% (increasing the influence of the other image) as the intersection moved towards the other image. The results are shown below:</p>
+                    it is time to blend images into a mosaic. This was done on the two images of the front of the International House, the two images of the side of the International House, and the Hilgard Hall.
+                    Since the images overlap by 40%-70%, we need to blend the images where they intersect. I did this by finding the intersection of the two images, and then make a mask that linearly increases
+                    from left to right on the intersected area. This means that the left side of the intersection is 100% the first image, and the right side is 100% the second image.
+                    The results are shown below:</p>
                 </p>
                 <figure style="display: inline-block; width: 20%; margin: 0 1%;">
                     <img src="Images/mosaic_front.jpg" alt="picture" style="width: 100%; height: auto;">
@@ -138,11 +146,118 @@
                     <img src="Images/blender_side.png" alt="drawing" style="width: 100%; height: auto;">
                     <figcaption>The blending mask that was used to blend the two images of the side of International Houses.</figcaption>
                 </figure>
-                <p>The results were quite good, and I managed to succesfully blend two images into two different mosaics.
-                    We can see that the blending procedure is good but not ideal, as it results in some artifacts. This is because the
-                    shape of the intersection is not perfect, as it should be a trapezoid instead of a rectangle. This will be fixed in part B 
-                    of the assignment.
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/campus_mosaic.jpg" alt="drawing" style="width: 100%; height: auto;">
+                    <figcaption>Mosaic of the Hilgard Hall.</figcaption>
+                </figure>
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/blender_side.png" alt="drawing" style="width: 100%; height: auto;">
+                    <figcaption>The blending mask that was used to blend the two images of the Hilgard Hall.</figcaption>
+                </figure>
+                <p>The results were good, and I thought it was really cool and satisfying to see that the mosic looks so smooth.
                 </p>
+                <h3>Part B</h3>
+                <p>Part B of the assignment is about creating the same mosaics as in part A, but this time do everything automatically.
+                    This means that we have to make a program that automatically finds matching features in the two images, and uses these features
+                    to perform the homography transformation. This process is split into 6 smaller steps: </p>
+                <h4>Part B, step 1:</h4>
+                <p> The first part of feature matchin is about doing corner detection. We want to find corners and use them as features as they are easy
+                    to match between images. I used the Harris corner detector to find corners in the images by utilizing the functions that were provided
+                    in the assignement. The resulting Harris corners for the images of the Hilgard Hall are shown below:</p>
+                </p>
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/harris_corners_front.png" alt="drawing" style="width: 100%; height: auto;">
+                    <figcaption>Front of the Hilgard Hall with the Harris corners marked.</figcaption>
+                </figure>
+                <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                    <img src="Images/harris_corners_side.png" alt="drawing" style="width: 100%; height: auto;">
+                    <figcaption>Front of the Hilgard Hall with the Harris corners marked.</figcaption>
+                </figure>
+                <p>Ideally, we would want to have features that are spread apart from each other. Features that are close provide redundant information,
+                    and are proun to the same noise. To reduce the amount of features in a way that makes sure the features are spread apart, we can use Adaptive Non-Maximal Suppression (ANMS).
+                    ANMS iteratively searches through all the neighbours for all the feature-points, and then removes the points that are not at least a factor of c times as strong of a corner
+                    as its strongest neighbour. I used a c-value of 0.9, as reccomended by the paper. For each iterate, the radius increases, until we are left with the desired amount of features, in this case 100.
+                    The remaining corners after ANMS are shown below:</p>
+                    <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                        <img src="Images/harris_corners_filtered_front.png" alt="drawing" style="width: 100%; height: auto;">
+                        <figcaption>Front of the Hilgard Hall with the remaining Harris corners after ANMS.</figcaption>
+                    </figure>
+                    <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                        <img src="Images/harris_corners_filtered_back.png" alt="drawing" style="width: 100%; height: auto;">
+                        <figcaption>Side of the Hilgard Hall with the remaining Harris corners after ANMS.</figcaption>
+                    </figure>
+                <h4>Part B, step 2:</h4>
+                <p>To be able to match features from the two pictures, we need to store some information about the features. The information we choose to store is a 8x8 patches of nearby pixels. Each of the
+                    pixels are 5 pixels away from each other, which means we are effectively storing a 40x40 patch of nearby pixels. Since we are now sampling the image, we need to make sure that we avoid 
+                    Aliasing by complying with the Nyquist-Shannon sampling theorem. This means that we need to make sure that the sampling rate is at least twice the highest frequency in the image. 
+                    This is done by using a Gaussian filter with a sigma value given by the following formula:
+                </p>
+                <div>
+                    <p><strong>Nyquist Cutoff</strong> = 1 / (2 × Sampling Frequency)</p>
+                    <p><strong>σ</strong> = 1 / (2 × π × Nyquist Cutoff)</p>
+                </div>
+                <p>and then do the sampling on the blurred image.</p>
+                <h4>Part B, step 3:</h4>
+                <p>Now that we have a description for each feature, it is time to match the features. For each feature, we look at the distance between the feature's 
+                    description and all the feature descriptions in the other image. We then collect the closest and the second closest features, and calculate the ratio between the two distances.
+                    All features that have a ratio below a certian threshold (I used 0.5) are considered a match. The matching features are shown below:</p>
+                    <figure style="display: inline-block; width: 50%; margin: 0 1%;">
+                        <img src="Images/matching_features.png" alt="drawing" style="width: 100%; height: auto;">
+                        <figcaption>Matching features in the two images of the Hilgard Hall.</figcaption>
+                    </figure>
+                <h4>Part B, step 4:</h4>
+                <p>Altough this trick helped with removing outliers, we still have some outliers left. To remove the final outliers, we use an algorithm called
+                    RANSAC. RANSAC iteratively selects four random matches, and creates an homography transformation based on those four matches. 
+                    It then performs an homography transformation of one image onto the other, and looks at the distance between the remaining featurs. 
+                    All the features that are within the distance of a certain threshold (I used 5), are considered inliers for this specific transformation. 
+                    After a certain number of iterations (I used 1000), we extract the outliers that are counted as an inlier the most times. I saved the 12
+                    best inliers. The inliers for the Hilgard Hall are shown below:</p>
+                </p>
+                <figure style="display: inline-block; width: 50%; margin: 0 1%;">
+                    <img src="Images/RANSAC_Corners.png" alt="drawing" style="width: 100%; height: auto;">
+                    <figcaption>Remaning matches after running the RANSAC algorithm on the Hilgard Hall.</figcaption>
+                </figure>
+                <h4>Part B, step 5:</h4>
+                <p>Now that we are left with features that all match, it is time to perform the warping to create the MOSAIC's. This is done in the same way as in part A, 
+                    but this time we use the automatically extracted features instead of manually extracted features. The results are shown below, with the manually and automatically stiched images side by side:</p>
+                    <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                        <img src="Images/campus_mosaic.jpg" alt="picture" style="width: 100%; height: auto;">
+                        <figcaption>Mosaic of the Hilgard Hall, features extracted manually.</figcaption>
+                    </figure>
+                    <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                        <img src="Images/mosaic_campus_automatic.jpg" alt="remarkable" style="width: 100%; height: auto;">
+                        <figcaption>Mosaic of the Hilgard Hall, features extracted automatically.</figcaption>
+                    </figure>
+                    <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                        <img src="Images/mosaic_front.jpg" alt="drawing" style="width: 100%; height: auto;">
+                        <figcaption>Mosaic of the front of International House, features extracted manually.</figcaption>
+                    </figure>
+                    <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                        <img src="Images/mosaic_ihouse_front_automatic.jpg" alt="drawing" style="width: 100%; height: auto;">
+                        <figcaption>Mosaic of the front of International House, features extracted automatically.</figcaption>
+                    </figure>
+                    <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                        <img src="Images/mosaic_side.jpg" alt="drawing" style="width: 100%; height: auto;">
+                        <figcaption>Mosaic of the side of International House, features extracted manually.</figcaption>
+                    </figure>
+                    <figure style="display: inline-block; width: 20%; margin: 0 1%;">
+                        <img src="Images/mosaic_Ihouse_side_automatic.jpg" alt="drawing" style="width: 100%; height: auto;">
+                        <figcaption>Mosaic of the side of International House, features extracted automatically.</figcaption>
+                    </figure>
+                    <p>The resulting mosaics were almost identical, but the image of the International House from the side
+                        is slightly less blurry on the automatic mosiac. This mean that the automatic feature extraction was
+                        just as good, and even a little better than the manual feature extraction. Awesome!
+                    </p>
+                    <h4>What did I learn?</h4>
+                    <p>I generally learned a lot in this assignment, and I thought it was both very interesting and satisfying, as the 
+                        results were really good. If I were to pick one thing that was the coolest to learn, I would say the RANSAC algorithm.
+                        The algorithm is very intuitive, but distinguishes from many other algorithms/methods used in this assignment and course in general,
+                        because it is not theoretically possible to prove that it is going to work. If someone would have suggested this algorithm 
+                        to me without showing any results, I would be unsure wheter it would actually work good or not, because you select random points to
+                        use as base for homography, meaning that some of the iterations are going to count "bad" inliers. However, the algortihm worked
+                        really well!
+                    </p>
+                
     </main>
 </body>
 </html>
