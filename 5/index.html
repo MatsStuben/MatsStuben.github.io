@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 5, Fun with diffusion models</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Project 5</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Fun with diffusion models</h2>
+            <h3>Part A: The Power of Diffusion Models!</h3>
+            <h4>Part 0: Setup.</h4>
+            <p>In this project, we are using the DeepFlowyd IF diffusion model. This is a two stage model that first generates a 64x64 image, and then uses this 
+                image to generate a more fine-grained 256x256 image. The model is text-to-image, meaning it generates images based on text inputs.
+                The parameter num_inference_steps decides how many intermediate steps the model uses. Below is the models'
+                output on the three text inputs provided in the assignment, with num_inference_steps = 20. 
+            </p>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/snow_mountain.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Prompt: an oil painting of a snowy mountain village.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/man_with_hat.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Prompt: a man wearing a hat.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/rocket_ship.png" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Prompt: a rocket ship.</figcaption>
+            </figure>
+            <p>Below is the same images, but this time with the parameter num_inference_steps = 100</p>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/snow_mountain_100.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Prompt: an oil painting of a snowy mountain village.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/man_with_hat_100.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Prompt: a man wearing a hat.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/rocket_ship_100.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Prompt: a rocket ship.</figcaption>
+            </figure>
+            <p>In general, the model does really well at generating images that matches the prompts. We seen that with num_inference_steps = 100, 
+                the imags are more detailed and looks more realistic, which is especially visble in the image of the man wearing a hat. The other
+                images are looking like drawings and not real images, so the effect with different values on num_inference_steps is not as big.
+                The seed I have used througoht this assignment is 137. 
+            </p>
+            <h4>Part 1.1: Implementing the forward process.</h4>
+            <p>To train a diffusion model, we need noisy versions of images at different noise levels. To do this, we generate a noisy image
+                and then make a function that gradually includes more of the noise and less of the original image. That is done using this formula:
+                \( x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon \)
+                where \( x_t \) is the noisy version at time \( t \), \( x_0 \) is the original image, \( \epsilon \) is the noise image, and \( \bar{\alpha}_t \) is the
+                noise factor. Below is the test image, an image of the Berkeley tower, and a noisy version at t = 250, t = 500, and t = 750.
+            </p>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/test_im.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Test image, Berkeley tower.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/test_noise_250.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 250.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/test_noise_500.png" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 500.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/test_noise_750.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 750.</figcaption>
+            </figure>
+            <h4>Part 1.2: Clasical denoising.</h4>
+            <p>A very simple method for denoising an image is to Gaussian blur it. However, this does not work well for this purpose,
+                as we can see from the Gaussian blurring of the noisy versions at t = 250, t = 500 and t = 750 below. The images are definetely
+                less noisy, but the image is also less sharp and the details are not as visible.
+            </p>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/test_noise_250.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 250.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/gaussian_blur_t250.png" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 250, with a Gaussian blur with sigma = 1.5.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/test_noise_500.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 500.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/gaussian_blur_t500.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 500, with a Gaussian blur with sigma = 1.7.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/test_noise_750.png" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 750.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/gaussian_blur_t750.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 750, with a Gaussian blur with sigma = 1.9.</figcaption>
+            </figure>
+            <h4>Part 1.3: Implementing One Step Denoising.</h4>
+            <p>Next up, we will do one-step denoising using a Unet. This is done on the same image of the Berkeley tower, once again
+                three times, at t = 250, t = 500 and t = 750. The noisy images together with the estimated denoised images are shown below.
+            </p>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/noise_t250_1_3.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 250.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/clean_estimate_t250.png" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image at t = 250.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/noise_t500_1_3.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 500.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/clean_t500_est.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image at t = 500.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/noise_t750_1_3.png" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Noisy version of the test image at t = 750.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/clean_est_t750.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image at t = 750.</figcaption>
+            </figure>
+            <p>This method works a lot better than the Gaussian blur method. There seems to be no noise in any of the images. 
+                However, this model also leads to hallucination, and we can see that the higher the t-value, the further away 
+                the estimated denoised image is from the original image. This makes a lot of sense since a higher t-value leads
+                to more noise and less preservance of the original image, making it harder to estimate the original image.
+            </p>
+            <h4>Part 1.4: Iterative Denoising.</h4>
+            <p>Next up, we want to use the diffusion model for what it is really made for, iteratvie denoising. This is done by,
+                at each time step, estimate the denoised image, and then interpolate between the noisy image and the estimated denoised image
+                according to the equation:
+            </p>
+            <p>
+                \( x_{t'} = \frac{\sqrt{\bar{\alpha}_{t'} \beta_t}}{1 - \bar{\alpha}_t} x_0 
+                + \frac{\sqrt{\bar{\alpha}_{t'} (1 - \bar{\alpha}_{t'})}}{1 - \bar{\alpha}_t} x_t 
+                + v_\sigma \)
+            </p>
+            <p>
+                where:
+                <ul>
+                    <li>\( x_t \) is your image at timestep \( t \)</li>
+                    <li>\( x_{t'} \) is your noisy image at timestep \( t' \) where \( t' < t \) (less noisy)</li>
+                    <li>\( \bar{\alpha}_t \) is defined by <code>alphas_cumprod</code>, as explained above.</li>
+                    <li>\( \alpha_t = \frac{\bar{\alpha}_t}{\bar{\alpha}_{t'}} \)</li>
+                    <li>\( \beta_t = 1 - \alpha_t \)</li>
+                    <li>\( x_0 \) is our current estimate of the clean image using equation A.2 just like in section 1.3</li>
+                </ul>
+            </p>
+            <p>Instead of doing this 1000 times, it works well to do it with jumps of 30. Starting at t = 690 (and going down to 0, where 0 is 
+                the final, denoised image), the images each 5th time step is shown below. 
+            </p>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/t690.png" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image at t = 690 using iterative method.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/t540.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image at t = 540 using iterative method.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/t390.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image at t = 390 using iterative method.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/t240.png" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image at t = 240 using iterative method.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/t90.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image at t = 90 using iterative method.</figcaption>
+            </figure>
+            <p>And finally, the image at t = 0, compared to the original image and the images denoised at the same time step using the one step method and the 
+                Gaussian blur method.
+            </p>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/test_im.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Original image, Berkeley tower.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/Iter_clean.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image using the iterative method.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/one_step_clean.png" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image using the one step method</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/gaussian_clean.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image using Gaussian blur.</figcaption>
+            </figure>
+            <p>As we can see, using the iterative method works best, as this provides a much more detailed image than using the one 
+                step method. The difference in detail is especially visible if we upsample the images to 256x256 images:
+            </p>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/iter_clean_upsample.png" alt="remarkable" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image using the iterative method, upsampled</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/one_step_upsample.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Estimated denoised version of the test image using the one step method, upampled.</figcaption>
+            </figure>
+            <h4>Part 1.5: Diffusion Model Sampling.</h4>
+            <p>If we set i_start = 0, we effectively generate random images by denoising purely noise images. The results
+                from doing this on 5 images with the prompt "a high quality photo" are shown below.
+            </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/random1.png" alt="picture" style="width: 100%; height: auto;">
+            <figcaption>Randomely generated image.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/random2.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Randomely generated image.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/random3.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Randomely generated image.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/random4.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Randomely generated image.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/random5.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Randomely generated image.</figcaption>
+        </figure>
+        <h4>Part 1.6: Classifier-Free Guidance (CFG)</h4>
+        <p>While we did get some good images usin the last approach, we also sometimes get completely non-sensical images. 
+            To improve the images that are generated and make them more realistic, we can use the CFG method. This is done by
+            creating two images, one uncondional (empty prompt) and one conditional, and then make a noise estimate according to 
+            the function:
+            ϵ = ϵ<sub>u</sub> + γ(ϵ<sub>c</sub> − ϵ<sub>u</sub>)
+            where ϵ<sub>u</sub> is the noise estimate for the unconditional image, ϵ<sub>c</sub> is the noise estimate for the conditional image. 
+            We get the "magic" by using a γ value larger than one. Below are 5 images created with a γ value of 7.
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/cfg_random1.png" alt="picture" style="width: 100%; height: auto;">
+            <figcaption>Randomely generated image.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/cfg_random2.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Randomely generated image.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/cfg_random3.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Randomely generated image.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/cfg_random4.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Randomely generated image.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/cfg_random5.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Randomely generated image.</figcaption>
+        </figure>
+        <p>As we can see, these images are generally sensible and looks like real images!</p>
+        <h4>Part 1.7: Image-to-image Translation</h4>
+        <p>In this part, instead of creating random images by "forcing" noisy images back onto the manifold of natural images,
+            I will try to recreate the image of the Berkeley tower from noisy versions of it. I will test it at the starting indexes
+            [1, 3, 5, 7, 10, 20]. A starting index of 1 means that the image is pure noise, and a start index of 33 means that the image
+            is the original image. The results are shown below. 
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/berk_denoised_indx1.png" alt="picture" style="width: 100%; height: auto;">
+            <figcaption>Berkeley tower denoised at starting index 1.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/berk_denoised_indx3.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Berkeley tower denoised at starting index 3.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/berk_denoised_indx5.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Berkeley tower denoised at starting index 5.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/berk_denoised_indx7.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Berkeley tower denoised at starting index 7..</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/berk_denoised_indx10.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Berkeley tower denoised at starting index 10.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/berk_denoised_indx20.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Berkeley tower denoised at starting index 20.</figcaption>
+        </figure>
+        <p>The results are as expected; the higher the starting index, the more the similar the image are to the original image,
+            and the easier it is for the model to recreate something similar to the original image. The evoulution of the images are
+            quite interesting. At starting index 1, the image is basically just noise and the generated image is more or less random.
+            At index 3, the main colors in the images are somewhat reporduced, but there is still no sign of a tower. At index 5, there
+            are still no tower, but the pictures shows a woman dressed in a white dress, which is somewhat similar to the white tower. 
+            At index 7, we start seing a tower, and as the index increases, the tower becomes more and more similar to the berkeley tower,
+            and so does the surrondings. I also did the same procedure on two of my own images. The results are shown below:
+        </p>
+    </main>
+</body>
+</html>
