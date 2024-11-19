@@ -697,7 +697,7 @@
             Where \sigma is the noise level. 
             The result on the MNIST dataset with a noise level of 0.0, 0.2, 0.4, 0.6, 0.8 and 1.0 are shown below:
         </p>
-        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
             <img src="Images/differen_sigmas.png" alt="drawing" style="width: 100%; height: auto;">
             <figcaption>The noise function with different sigma values.</figcaption>
         </figure>
@@ -721,20 +721,20 @@
             After the model is trained, we can test it on the test set. The results on the loss fucntion,
              plus the result on the test set with training on 1 epochs are shown below:
         </p>
-        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
             <img src="Images/training_1_epoch.png" alt="drawing" style="width: 100%; height: auto;">
             <figcaption>Evolution of the loss function after each iteration.</figcaption>
         </figure>
-        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
             <img src="Images/test_one_epoch.png" alt="drawing" style="width: 100%; height: auto;">
             <figcaption>Result on the test set after training on one epoch.</figcaption>
         </figure>
         <p>Here is the result after training on 5 epochs:</p>
-        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
             <img src="Images/train_epoch_5.png" alt="drawing" style="width: 100%; height: auto;">
             <figcaption>Evolution of the loss function after each iteration.</figcaption>
         </figure>
-        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
             <img src="Images/test_epoch_5.png" alt="drawing" style="width: 100%; height: auto;">
             <figcaption>Result on the test set after training on 5 epoch.</figcaption>
         </figure>
@@ -746,11 +746,36 @@
         <h5>Part 1.2.2: Out-of-Distribution Testing</h5>
         <p>The final part of part 1 is testing how well the model that is trained on the noise level = 0.5 is at denoising
             images with different noise level. We will test the model on the test set with noise levels 0.0, 0.2, 0.4, 0.5, 0.6, 0.8 and 1.0.
+            The images at the different noise levels are shown below:
             The results are shown below:
         </p>
-        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
-            <img src="Images/test_diff_noise.png" alt="drawing" style="width: 100%; height: auto;">
-            <figcaption>Result on the test set with different noise levels.</figcaption>
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+            <img src="Images/different_denoise.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption></figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+            <img src="Images/diff_denoise_0.2.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption></figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+            <img src="Images/diff_denoise_04.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption></figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+            <img src="Images/diff_denoise_05.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption></figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+            <img src="Images/diff_denoise_06.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption></figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+            <img src="Images/diff_denoise_08.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption></figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+            <img src="Images/diff_denoise_1.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption></figcaption>
         </figure>
         <p>We see that the model is generally performing well on different noise levels, but that it gradually struggles more after 
             noise level 0.5. This is expected, as the model is trained on noise level 0.5, and therefore should perform best on this noise level,
