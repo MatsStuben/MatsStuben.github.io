@@ -268,6 +268,7 @@
         </figure>
         <p>As we can see, these images are generally sensible and looks like real images!</p>
         <h4>Part 1.7: Image-to-image Translation</h4>
+        <h5>Part 1.7.1 Editing Hand-Drawn and Web Images</h5>
         <p>In this part, instead of creating random images by "forcing" noisy images back onto the manifold of natural images,
             I will try to recreate the image of the Berkeley tower from noisy versions of it. I will test it at the starting indexes
             [1, 3, 5, 7, 10, 20]. A starting index of 1 means that the image is pure noise, and a start index of 33 means that the image
@@ -305,6 +306,561 @@
             At index 7, we start seing a tower, and as the index increases, the tower becomes more and more similar to the berkeley tower,
             and so does the surrondings. I also did the same procedure on two of my own images. The results are shown below:
         </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/balder.png" alt="picture" style="width: 100%; height: auto;">
+            <figcaption>Picture of a friend, Balder.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/balder_t1.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Balder at time step 1.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/balder_t3.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Balder at time step 3.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/balder_t5.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Balder at time step 5.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/balder_t7.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Balder at time step 7.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/balder_t10.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Balder at time step 10.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/balder_t20.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Balder at time step 20.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/chateud.png" alt="picture" style="width: 100%; height: auto;">
+            <figcaption>Picture of a Wine chateu in Napa valley.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/chateud_t1.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Chateu at time step 1.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/chateud_t3.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Chateu at time step 3.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/chateud_t5.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Chateu at time step 5.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/chateud_t7.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Chateu at time step 7.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/chateud_t10.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Chateu at time step 10.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/chateud_t20.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Chateu at time step 20.</figcaption>
+        </figure>
+        <h5>Part 1.7.1 Editing Hand-Drawn and Web Images</h5>
+        <p>Next up, I'm going to use the same approach but this time with drawings. The aim is to end up with a more realistic version of the 
+            drawings. I am going to use 1 drawing from the web, and two hand-drawn images. Here is the result on the web image:
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/web.png" alt="picture" style="width: 100%; height: auto;">
+            <figcaption>Picture of a waterfall found on the web.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/webt1.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Waterfall at time step 1.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/webt3.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Waterfall at time step 3.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/webt5.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Waterfall at time step 5.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/ebt7.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Waterfall at time step 7.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/webt10.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Waterfall at time step 10.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/webt20.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Waterfall at time step 20.</figcaption>
+        </figure>
+        <p>For my own drawing, I wanted to draw something really famous, with the hope that the model had been trained on a lot of
+            pictures of this famous thing. I decided to draw the Eiffel tower. The hope was that the model would at some stage recognize
+            the Eiffel tower, and draw a much more realistic version. Here are the results:
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/eiffel.png" alt="picture" style="width: 100%; height: auto;">
+            <figcaption>Picture of a hand drawn Eiffel tower, drawn by me.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/eiffel_t1.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Eiffel at time step 1.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/eiffel_t3.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Eiffel at time step 3.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/eiffel_t5.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Eiffel at time step 5.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/eiffel_t7.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Eiffel at time step 7.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/eiffel_t10.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Eiffel at time step 10.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/eiffel_t20.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Eiffel at time step 20.</figcaption>
+        </figure>
+        <p>This results were very cool! Especially at t10, the model managed to create a realistic photo of the eiffel tower, even though 
+            the prompt does not include anyhting about the Eiffel tower! For the second drawing, I wanted to use the same image, but change the
+            background colors to see if we could get the Eiffel tower in a completely different setting. Here are the results:
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/changed_eiffel.png" alt="picture" style="width: 100%; height: auto;">
+            <figcaption>Picture of a hand drawn Eiffel tower, drawn by me, with different settings.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/changed_eiffelt1.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Changed Eiffel at time step 1.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/changed_eiffelt3.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Changed Eiffel at time step 3.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/changed_eiffelt5.png" alt="remarkable" style="width: 100%; height: auto;">
+            <figcaption>Changed Eiffel at time step 5.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/changed_eiffelt7.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Changed Eiffel at time step 7.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/changed_eiffelt10.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Changed Eiffel at time step 10.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/changed_eiffelt20.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Changed Eiffel at time step 20.</figcaption>
+        </figure>
+        <p>I think these results were also really cool, as the Eiffel tower at t = 10 and t = 20 now is placed in completely different
+            sceneries. </p>
+        <h5>Part 1.7.2 Inpainting</h5>
+        <p>Another interesting thing we could do is generating an image that has the same content as another image where a mask is 0, 
+            but new content whenever the mask is 1. We do this by denoising a random image, but at every step, we force the denoised image
+            to be the same as the noisy version of the original image at the same time step where the mask is 0. In this way, the model will
+            have surrounding context, at the correct noise level, to the new content, so that it is capeable of generating relevant content within 
+            the mask. I first did this on the Berkeley tower, where the mask is on the top of the tower. 
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/berk_tower_mask.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Berkeley tower, this time with another top generated by the diffusion model.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/mask_berk.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>The mask used to replace the top of the Berkeley tower.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/to_replace_berk.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>The part of the berkeley tower that is replaced.</figcaption>
+        </figure>
+        <p>Next, I did it on a football kit belonging to Hamburg SV. I thought it would be cool to keep the same kit, but make a mask around
+            the bade to make the model generate a new badge. I chose Hamburg SV because they have a rectangular badge, making it easy to find the mask.
+            Here are the results:
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/HamburgSVkit.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Original image of the Hamburg SV kit.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/mask_hamburg.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>The mask used to replace the badge on the Hamburg SV kit.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/badge_hamburg.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>The part of the Hamburg kit that is replaced.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/hamburg_replaced.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Hamburg kit, this time with another badge generated by the diffusion model.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/upsampled_replace_hamburg.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Upsampled version of the kit with the newly generated badge, to see clearer what the new badge looks like.</figcaption>
+        </figure>
+        <p>For the last image in this part, I used an image of Pedro Rodriguez in a Barcelona kit. I put the mask over his face, so that 
+            the modl would generate a new face. My hope was that the model would generate a face that looks like Lionel Messi, as I assume
+            the model is trained on far more picture of Lionel Messi in the same kit than Pedro Rodrigues. Here are the results:
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/pedro.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Original image of the Pedro.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/mask_pedro.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>The mask used to replace the head of Pedro.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/Pedro_head.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>The head of Pedro.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/pedro_modified.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Picture of pedro, this time with a new face.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/pedro_upsampled.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Upsampled version of Pedro.</figcaption>
+        </figure>
+        <p>Although the model did not come up with the picture of Lionel Messi, it definetely made a new face!
+            In general, the results from this part was great as the model manage to come up with very realistic, but
+            completely new content on the masked areas, and the content generally matches the surroundings well.
+        </p>
+        <h5>Part 1.7.3 Text-Conditioned Image-to-image Translation</h5>
+        <p>In this part, we are going to denoise images we already have, but by using a prompt that does not match the original image.
+            We will start at different noise levels, same as in the previous sections, and see what the model generates. The theory in
+            advance is that the earlier noise level, the closer the image looks to the prompt, and the higher the noise level, the more
+            the image looks like the original image. The most interesting parts would likely be at the intermediate noise levels, where
+            the images hoepfully will look like a hybrid of the original image and the prompt. Here are the results on the Berkeley tower,
+            with the prompt "a rocket ship":
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/rocket_1.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 1</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/rocket_3.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 3</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/rocket_5.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 5</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/rocket_7.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 7</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/rocket_10.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 10</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/rocket_20.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 20</figcaption>
+        </figure>
+        <p>As expected, the rocket became gradually more and more similar to the Berkeley tower. 
+            My next idea was to use the Haburg kit together with the prompt "Manchester United kit", to hoepfully
+            generate som cool new ideas for a Manchester United kit. Here are the results:
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/utd_1.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 1</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/utd_3.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 3</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/utd_5.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 5</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/utd_7.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 7</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/utd_10.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 10</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/utd_20.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 20</figcaption>
+        </figure>
+        <p>I especially liked the last two, and believe that they have potential to become awesome away kits!
+            The last thing I wanted to try, was to use an image of a sail boat with the prompt "shark fint", as the sail 
+            looks quite similar to a shark fin. Here are the results:
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/shark_1.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 1</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/shark_3.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 3</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/shark_5.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 5</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/shark_7.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 7</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/shark_10.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 10</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/shark_20.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>t = 20</figcaption>
+        </figure>
+        <p>Although the results where not great, I decided to keep it and not change the idea because I have an interesting theory 
+            as to why the results are not great. The model seem to care much about the first word "shark", but not the second, "fin", 
+            as it tries to generate images of whole sharks rather than of shark fins. This suggests that there are improvmnets to be made 
+            when it comes to the attention layers in the transfomer model, as it ideally should understand that the "fin" part of the prompt 
+            is also important.
+        </p>
+        <h4>Part 1.8 Visual Anagrams</h4>
+        <p>In this part we are creating optical illusions by making visual anagrams. The images looks like one thing when you first look at it,
+            but when you flip it, it looks like something else. This is done by following the same denoising process as above, but instead of having
+            one prompt, you have two. At each time step we create two denoised images; one version of the image as is with one of the prompts,
+            and another version of the current image flipped upside down with the other prompt. We then obtain two noise estimates, which we combine 
+            by averaging them. We then use this as the noise estimate for the current time step. Below is this process shown with three different sets 
+            of prompts: </p>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/campfire.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Prompt 1: an oil painting of people around a campfire. Prompt 2: an oil painting of an old man</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/tree_face.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Prompt 1: an oil painting of a tree. Prompt 2: an oil painting of a face</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/cat_fish.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Prompt 1: an oil painting of a cat. Prompt 2: an oil painting of a fish</figcaption>
+            </figure>
+            <p>I used the term oil painting in all the scenarios because I figured out that this worked better than trying to create 
+                anagrams of real images. The results were quite cool, and I especially liked the cat fish anagram.
+            </p>
+            <h4>Part 1.9 Hybrid Images</h4>
+            <p>The final part of part A of this assignment is about creating hybrid images. Hybrid images in this sense,
+                is an image that looks like one thing when you are close to it, but another thing when you are far away from it.
+                This is generally done by combining a low-pass filtered version of one image with a high-pass filtered version of another image.
+                The way we do it using the diffusion model is that we iteratively denoise one image in two ways, using two different prompts. Then
+                we low-passfilter the estimated noise from the first prompt, and high-pass filter the estimated noise from the second prompt. We then
+                combine the noise by adding them together, and use this as the estimated noise. The results on three different set of prompts are shown below:
+            </p>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/skull_waterfall.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Low pass prompt: a lithograph of a skull. High pass prompt 2: a lithograph of waterfalls</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/forrest_man.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Low pass prompt 1: a lithograph of a the face of a man. High pass prompt 2: a lithograph of a forrest</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+                <img src="Images/old_man_baby.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Low pass prompt: a baby’s face. High pass prompt: an elderly person’s face</figcaption>
+            </figure>
+        <h3>Part B: Diffusion Models from Scratch!</h3>
+        <h4>Part 1: Training a Single-Step Denoising UNet</h4>
+        <h4>Part 1.1: Implementing the UNet</h4>
+        <p>The first part is about implementing the UNet that we are going to use in this exercise.
+            To implement the UNet, we must first implement the building blocks that the UNet consists of. These are:
+        </p>
+            <ul>
+                <li>Convolution</li>
+                <li>Down convolution</li>
+                <li>Up convolution</li>
+                <li>Flatten</li>
+                <li>Unflatten</li>
+                <li>Concatenate</li>
+                <li>Convolutional block</li>
+                <li>Down convolutional block</li>
+                <li>Up convolutional block</li>
+            </ul>
+            <p>After these blocks are implemented, we need to build the network by using these blocks according to the 
+                arcitecture provided in the task description. To do this we need to figure out the correct order of building blocks
+                and the correct input and output sizes of each block. There is no images to show from this part, but the UNet is used
+                in the next parts.
+            </p>
+        <h4>Part 1.2: Using the UNet to Train a Denoiser</h4>
+        <p>In this part, we are going to use the UNet to denoise images from the MNIST dataset. The MNIST dataset is a legendary dataset
+            of handrawn images. To train a model that aims at denoising such images, we first need to have noisy versions of the images. 
+            This is done by adding noise to the training set according to this formula:
+            \( z = x + \sigma \epsilon, \quad \text{where} \quad \epsilon \sim \mathcal{N}(0, I). \)
+            Where \sigma is the noise level. 
+            The result on the MNIST dataset with a noise level of 0.0, 0.2, 0.4, 0.6, 0.8 and 1.0 are shown below:
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/differen_sigmas.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>The noise function with different sigma values.</figcaption>
+        </figure>
+        <h5>Part 1.2.1 Training</h5>
+        <p>Now that we have the training data, it is time to train the model. The UNet is trained two times, 
+             with the following parameters:
+            <ul>
+                <li>Noise level: 0.5</li>
+                <li>Batch size: 256</li>
+                <li>Learning rate: 0.001</li>
+                <li>Number of epochs: 5</li>
+                <li>Optimizer: Adam</li>
+            </ul>
+            <ul>
+                <li>Noise level: 0.5</li>
+                <li>Batch size: 256</li>
+                <li>Learning rate: 0.001</li>
+                <li>Number of epochs: 1 </li>
+                <li>Optimizer: Adam</li>
+            </ul>
+            After the model is trained, we can test it on the test set. The results on the loss fucntion,
+             plus the result on the test set with training on 1 epochs are shown below:
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/training_1_epoch.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Evolution of the loss function after each iteration.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/test_one_epoch.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Result on the test set after training on one epoch.</figcaption>
+        </figure>
+        <p>Here is the result after training on 5 epochs:</p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/train_epoch_5.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Evolution of the loss function after each iteration.</figcaption>
+        </figure>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/test_epoch_5.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Result on the test set after training on 5 epoch.</figcaption>
+        </figure>
+        <p>As we can see, the loss function keeps decreasing after 1 epoch and is relatively much lower after
+            5 epochs than after 1 epoch. The results on the test set also shows that the model is able to denoise
+            the images better after 5 epochs than after 1, suggesting that the model has learned more without overfitting to
+            the data.
+        </p>
+        <h5>Part 1.2.2: Out-of-Distribution Testing</h5>
+        <p>The final part of part 1 is testing how well the model that is trained on the noise level = 0.5 is at denoising
+            images with different noise level. We will test the model on the test set with noise levels 0.0, 0.2, 0.4, 0.5, 0.6, 0.8 and 1.0.
+            The results are shown below:
+        </p>
+        <figure style="display: inline-block; width: 15%; margin: 0 1%;">
+            <img src="Images/test_diff_noise.png" alt="drawing" style="width: 100%; height: auto;">
+            <figcaption>Result on the test set with different noise levels.</figcaption>
+        </figure>
+        <p>We see that the model is generally performing well on different noise levels, but that it gradually struggles more after 
+            noise level 0.5. This is expected, as the model is trained on noise level 0.5, and therefore should perform best on this noise level,
+            but it should also perform well on lower noise levels as there is simply less noise to denoise. With noise level = 1, 
+            the model is not great, as the 4 number looks more like a 9.
+        </p>
+        <h4>Part 2: Training a diffusion model</h4>
+        <p>In this part, we are going to modify our UNet to turn it into a diffusion model. A diffusion model is trained 
+            at iteratively denoising an image. That means the model need to be able to "adapt" the denoising to the level 
+            of noise that is apparent in the image. To do this, we can train a model on a variety of different noise levels 
+            by providing it context about the noise level to a timestep feature t.
+        </p>
+        <h5>Part 2.1: Adding Time Conditioning to UNet</h5>
+        <p>For the model to know which timestep t we are in, we need to somehow add the timestep as a feature. 
+            This is done by adding two FCBlocks to our UNet, one after the unflatten block and one after the first 
+            upblock. The FCBlocks takes in two tensors containin block size amount of timesteps, add a linear layer 
+            followed by a GELU operation and yet another linear layer. The output off the FCBlocks are then added to 
+            the output of the Unflatten block and the output of the first UPBlock.</p>
+        <h5>Part 2.2: Training the UNet</h5>
+        <p>Now that the model is aware of which timestep we are at, it is time to train the model. The model is trained 
+            to estimate the noise at the current time step by minimizing the distance between the estimated noise and the
+            true noise. The model is trained on the MNIST dataset with batch size = 128 and hidden layers = 64. 
+            We use the Adam optimizer with an initial learning rate of 1e-3. The model is trained for 20 epochs.
+            We use an exponential learning rate decay scheduler with a gamma 0.1^(1/gamma). For the training algorithm, we need
+            to calculate some parameters, alpha, beta and alpha_bar. This is done by using the following recipe:
+            <ul>
+                <li>
+                    Create a list \( \beta \) of length \( T \) such that \( \beta_0 = 0.0001 \) and \( \beta_T = 0.02 \) and all other elements \( \beta_t \) for \( t \in \{1, \cdots, T-1\} \) are evenly spaced between the two.
+                </li>
+                <li>
+                    \( \alpha_t = 1 - \beta_t \)
+                </li>
+                <li>
+                    \( \bar{\alpha}_t = \prod_{s=1}^t \alpha_s \) is a cumulative product of \( \alpha_s \) for \( s \in \{1, \cdots, t\} \).
+                </li>
+            </ul>
+            The training algorithm works as follows:
+            At each iteration, we sample a batch of images from the training set. Then we generate a batch of random timesteps in the range. 
+            We then generate a random noise image, and creates a noisy version of the image by applying the formula:
+            \[
+            \mathbf{x}_t = \sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}
+            \]
+            We then input this image together with the timestep to the model, and calculate the loss function. We then backpropagate the loss
+            and update the weights of the model. This is done for the whole data set 20 times. 
+            <h5>Part 2.3: Sampling from the UNet</h5>
+            <p>
+                After the model is trained, it is time to sample from it. We sample from the model by first generating a random image. 
+                Then we iterate from t = 299 to t = 0. At each time step, we deploy the following algorithm:
+                Generate a noisy image Z if t > 1.
+                Make a forward pass through the model with the noisy image and the timestep t to generate a noise estimate.
+                Find an estimate of the clean image by deploying the formula:
+                \[
+                \hat{\mathbf{x}}_0 = \frac{1}{\sqrt{\bar{\alpha}_t}} \left( \mathbf{x}_t - \sqrt{1-\bar{\alpha}_t} \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t) \right) 
+                \]
+                Then, finally, make an estimate of the image at the next time step by deploying the formula:
+                \[
+                \mathbf{x}_{t-1} = \frac{\sqrt{\bar{\alpha}_{t-1}} \beta_t}{1 - \bar{\alpha}_t} \hat{\mathbf{x}}_0 + \frac{\sqrt{\alpha_t}(1 - \bar{\alpha}_{t-1})}{1 - \bar{\alpha}_t} \mathbf{x}_t + \sqrt{\beta_t} \mathbf{z}
+                \]
+                The training loss curve, together with the result on 5 images with epochs = 5 and epochs = 20 are shown below:
+            </p>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/loss_history_timec.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Loss function evolution over iterations.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/generated_epochs5.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Generated images after 5 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/generated_epochs20.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Generated images after 20 epochs.</figcaption>
+            </figure>
+            <p>
+                As we can see, the model is able to generate images that looks similar to the MNIST dataset. However, not all the images 
+                that are generated look like actual numbers. This is especially the case for epochs = 5. At epochs = 20, the generated images 
+                more often look more similar to actual numbers.
+            </p>
+            <h5>Part 2.4: Adding Class-Conditioning to UNet</h5>
+            <p>
+                To improve our diffusion model, we can add one more feature that represents the number we want to generate. We do this be one hot 
+                encoding the number, then send this into the same type of FCBlock's as was used for the timestep. The outputs from these are, as for the 
+                timesteps, added to the output of the Unflatten block and the output of the first UPBlock. To make the UNet work also without class labelling, 
+                we implement dropout where we 10% of the time set the one hot encoding to zero. Beside from the adding of c, the training is exactly as in the
+                last step.
+            </p>
+            <h5>Part 2.5: Sampling from the Class-Conditioned UNet</h5>
+            <p>
+                When we sample from the Class-Conditioned UNet, we use the same trick as we did in part A. At each iteration, we generate two noise estimates,
+                one condtioned with c = the number we want to generate, and one conditioned with c = 0. We then use the formula
+                \[
+                \epsilon = \epsilon_u + \gamma (\epsilon_c - \epsilon_u)
+                \]
+                where gamma = 5. We then use epsilon as the noise estimate, and the rest of the algorithm is exactly as in the previous part. The results on 
+                40 images, 4 of each digit 0-9, on epochs = 5 and epochs = 20, in addition to the loss function evolution are shown below:
+            </p>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_loss_uncond.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Loss function evolution over iterations.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/cond_generated_5epochs.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Generated images after 5 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/cond_generated_epochs20.png" alt="drawing" style="width: 100%; height: auto;">
+                <figcaption>Generated images after 20 epochs.</figcaption>
+            </figure>
+            <p>As we can see, the results are very good already after epochs = 5. The images clearly show the correct number.
+                The difference between 5 and 20 epochs are not very big, sggesting that 5 epochs is enough to train the model.
+            </p>
     </main>
 </body>
 </html>
