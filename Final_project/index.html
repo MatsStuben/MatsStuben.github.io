@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Final project, Neural Radiance Field!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Final project, Neural Radiance Field!</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Introduction</h2>
+            <p>Fill in.</p>
+            <h3>Part 1: Fit a Neural Field to a 2D Image</h3>
+            <p>
+                Before we start with using Neural Radiance Field (NeRF) to represent a 3D image, we are going to do it
+                on a 2D image. That means we are going to train a Neural Network to output r, g and b values given a 
+                pixel coordinate as input. We are going to use a Multilayer Perceptron (MLP) network with Sinusoidal
+                Positional Encoding (PE) that takes in the 2-dim pixel coordinates, and output the 3-dim pixel colors.
+                The Sinusoidal Positional Encoding applies a serious of sinusoidal functions to the two input parameters
+                to expand its dimensionality. The sinusoidal functions are defined from the function:
+                <p>PE(x) = {x, sin(2<sup>0</sup>πx), cos(2<sup>0</sup>πx), sin(2<sup>1</sup>πx), cos(2<sup>1</sup>πx), …, sin(2<sup>L-1</sup>πx), cos(2<sup>L-1</sup>πx)}</p>
+                where L is a hyperparameter we can choose. MLP is a stack of non-linear activation functions and fully connected layers (linear layers).
+                We use ReLU as the activation function. In this part of the excericise, we initially use three linear layers with 256 hidden units, and one final linear
+                with 3 output units (r, g, b). Then finaly, to make the output values between 0 and 1, we use a sigmoid function on each of the three 
+                outputs from the final linear layer. When we train the model, we use the mean squared error loss function and the Adam optimizer. 
+                To actually quantify how well the model recreates the image, we use the Peak Signal-to-Noise Ratio (PSNR). This is calculated from MSE using the formula:
+                <p>PSNR = 10 · log<sub>10</sub>(1 / MSE)</p>
+                Both the number of hidden layers, the channel size, the L-value and the  number of epochs are hyperparameters that can be tuned.
+                I started with the initial values of 3 hidden layers, 256 hidden units, L = 10 and a learning rate of 1e-2. The result after 0, 10, 20, 30 and 38 epochs (around 3000 iterations) 
+                together with the evolution of the loss function (PSNR) are shown below:
+            </p>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/fox.jpg" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Original image of fox.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/fox_epochs_0.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of fox with initial hyperparameters and 0 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/fox_10_epochs.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of fox with initial hyperparameters and 10 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/fox_10_epochs.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of fox with initial hyperparameters and 20 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/fox_30_epochs.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of fox with initial hyperparameters and 30 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/fox_epochs_38.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of fox with initial hyperparameters and 38 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_loss_38_epochs.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>PSNR training loss evolution over iterations.</figcaption>
+            </figure>
+            <p> As we can see, the result after 38 epochs looks pretty good, although not completely as sharp as the original image.
+                Then I tried changing some hyperparameters. I first tried changing the number of hidden layers from 4 to 6 by adding two more 
+                linear layers with 256 channels. The result after 38 epochs are shown below, together with the loss function are shown below:
+            </p>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/fox_2_more_layers.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of fox with 2 more hidden layers and 38 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_loss_2_more_layers.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>PSNR training loss evolution over iterations.</figcaption>
+            </figure>
+            <p>The results were wors than the original model. The results were worse than the original model. This could be because adding
+                two more layers increased the number of parameters, which likely requires more iterations to train the model effectively.
+                I then tried increase L to 15, which increased the models input parameters from 42 to 62.
+                The result after 38 epochs are shown below, together with the loss function are shown below:</p>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/fox_L_15.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of fox with L = 15 and 38 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_loss_L_15.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>PSNR training loss evolution over iterations.</figcaption>
+            </figure>
+            <p>The results looks almost indistingusihable from the initial hyperparameters, arguably slightly worse.
+                The loss function looks to have flatten out ca as much as with the initial hyperparameters,
+                so increasing the amount of iterations will likely not help much.
+            </p>
+            <p>I then tried with another image of my choice. I decided a picture of the canal outside of the hotel "The Venetian" 
+                in Las Vegas. The result after 0, 10, 20, 30 and 38 epochs, as well as the resulting loss function, are shown below:
+                I first tried to keep the initial hyperparameters for this image, i.e. 3 linear layers with 256 channels, L = 10 and a learning rate of 1e-2.
+            </p>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/venetian.jpg" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Original image of The Venetian.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/venetian_10_epochs.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of The Venetian with initial hyperparameters and 0 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/venetian_10_epochs.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of The Venetian with initial hyperparameters and 10 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/venetian_20_epochs.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of The Venetian with initial hyperparameters and 20 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/venetian_30_epochs.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of The Venetian with initial hyperparameters and 30 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/venetian_38_epochs.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of The Venetian with initial hyperparameters and 38 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_loss_venetian.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>PSNR training loss evolution over iterations.</figcaption>
+            </figure>
+            <p>As the loss function did not fully flatten out after 38 epochs, I tried to increase the learning rate slightly to 1.2e-2. 
+                The result after 38 epochs, together with the loss function are shown below:
+            </p>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/venetian_38_lr_1_2.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of The Venetian with learning rate = 1.2 and 38 epochs.</figcaption>
+            </figure>
+            <p>This result is very similar to a learning rate of 1.2. However, since the image size is smaller for 
+                the picture of The Venetian than for the picture of the  fox, an equal amount of epochs leads to far 
+                less iterations. I therefore tried to increase the number of epochs to 80, while keeping the same 
+                initial hyperparameters. The result after 80 epochs, together with the loss function are shown below:
+            </p>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/venetian_100_epochs.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>Recreated image of The Venetian with initial hyperparameters and 100 epochs.</figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_loss_80_epochs.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>PSNR training loss evolution over iterations.</figcaption>
+            </figure>
+            <p>As for the fox, the recreation of the image of The Venetian were quite good, although this image
+                is also a little blurry compared to the original.
+            </p>
+            <h3>Part 2: Fit a Neural Radiance Field from Multi-view Images</h3>
+            <p>In this part of the assignment, we are going to create a 3-d video of a lego excavator based on 2-d images using 
+                a neural radiance field. A Neural Radiance Field (NeRF) is a deep learning model that generates 3D scenes by learning
+                 how light interacts with objects in space. It takes 3D coordinates and a viewing direction as input and predicts the
+                 color and density at those points. By sampling multiple points along camera rays and applying a physics-based volume
+                rendering equation, NeRF synthesizes realistic 2D images from new viewpoints. These 2D immages can be used to create a 
+                3D video. To set up this model, we first need to implement some functions:
+            </p>
+            <h4>Part 2.1 Create Rays from Cameras</h4>
+            <p>First, we need a way to transfer from camera to world coordinates. This is done by multiplying with the camera to world matrix.
+                The camera-to-world matrix is a 4x4 transformation matrix that includes the camera's rotation (3x3), translation (3x1), and a 
+                homogeneous coordinate row [0, 0, 0, 1], mapping 3D points from the camera's local coordinate system to the global world coordinate system.
+            </p>
+            <p> The next function we need is a function that converts a point from the pixel coordinate system to the camera coordinate system.
+                This is done by using the inverse of the camera matrix. The camera matrix is a 3x3 matrix that includes the camera's focal length, 
+                and the half-width and half-height of the camera. The inverse of the camera matrix is used to convert from pixel coordinates to camera coordinates.
+                This is done by solving for u,v in the following equation:
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                      <mi>s</mi>
+                      <mo>&#xA0;</mo>
+                      <mfenced open="[" close="]">
+                        <mtable>
+                          <mtr><mtd><mi>u</mi></mtd></mtr>
+                          <mtr><mtd><mi>v</mi></mtd></mtr>
+                          <mtr><mtd><mn>1</mn></mtd></mtr>
+                        </mtable>
+                      </mfenced>
+                      <mo>=</mo>
+                      <mo>&#xA0;</mo>
+                      <mi>K</mi>
+                      <mo>&#xA0;</mo>
+                      <mfenced open="[" close="]">
+                        <mtable>
+                          <mtr><mtd><msub><mi>x</mi><mi>c</mi></msub></mtd></mtr>
+                          <mtr><mtd><msub><mi>y</mi><mi>c</mi></msub></mtd></mtr>
+                          <mtr><mtd><msub><mi>z</mi><mi>c</mi></msub></mtd></mtr>
+                        </mtable>
+                      </mfenced>
+                    </mrow>
+                  </math>
+                where K is given by:
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                      <mi>K</mi>
+                      <mo>=</mo>
+                      <mfenced open="[" close="]">
+                        <mtable>
+                          <mtr>
+                            <mtd><msub><mi>f</mi><mi>x</mi></msub></mtd>
+                            <mtd><mn>0</mn></mtd>
+                            <mtd><msub><mi>o</mi><mi>x</mi></msub></mtd>
+                          </mtr>
+                          <mtr>
+                            <mtd><mn>0</mn></mtd>
+                            <mtd><msub><mi>f</mi><mi>y</mi></msub></mtd>
+                            <mtd><msub><mi>o</mi><mi>y</mi></msub></mtd>
+                          </mtr>
+                          <mtr>
+                            <mtd><mn>0</mn></mtd>
+                            <mtd><mn>0</mn></mtd>
+                            <mtd><mn>1</mn></mtd>
+                          </mtr>
+                        </mtable>
+                      </mfenced>
+                    </mrow>
+                  </math>
+                  where fx, fy is the focal length and ox, oy is the half-width and half-height of the camera.
+                
+            </p>
+            <p>
+                We also need a function that converts a pixel coordinate to a ray with origin and normalized direction. The origin is simply the 
+                position of the camera and can be found by using the above functions. The normalized direction is found by solving the following equation:
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                      <msub>
+                        <mi>r</mi>
+                        <mi>d</mi>
+                      </msub>
+                      <mo>=</mo>
+                      <mfrac>
+                        <mrow>
+                          <msub>
+                            <mi>X</mi>
+                            <mi>w</mi>
+                          </msub>
+                          <mo>-</mo>
+                          <msub>
+                            <mi>r</mi>
+                            <mi>o</mi>
+                          </msub>
+                        </mrow>
+                        <mrow>
+                          <mo>&#x2225;</mo>
+                          <msub>
+                            <mi>X</mi>
+                            <mi>w</mi>
+                          </msub>
+                          <mo>-</mo>
+                          <msub>
+                            <mi>r</mi>
+                            <mi>o</mi>
+                          </msub>
+                          <mo>&#x2225;</mo>
+                          <mn>2</mn>
+                        </mrow>
+                      </mfrac>
+                    </mrow>
+                  </math>
+                where Xw is the pixel coordinate in world coordinates and ro is the camera position.
+            </p>
+            <h4>Part 2.2 Sampling and part 2.3, Putting the Dataloading All Together</h4>
+            <p>
+                Now that we are able to create rays from pixels from images, we need to sample points along the rays. We do this by 64 points
+                uniformaly distributed along the ray, starting 2 units away from the camera and ending 6 units away from the camera. To avoid 
+                overfitting, we add a small, random pertubation to the points, but only during training. In order to sample random rays from the 
+                set of images, I made a class called RaysData that takes in images, K-matrices (intrinsic camera matrices), and camera-to-world matrices (extrinsic camera matrix).
+                The class has a function sample_rays that samples N rays from random images and random pixels in the images.
+
+            </p>
+            <h4>Part 2.4: Neural Radiance Field</h4>
+            <p>Now that we have 3d-samples, we want to use a nerual network (MLP also this time) to predict the density and color for those samples.
+                This time, the MLP takes in 2 3-d vectors as input, the 3-d point and the viewing direction, and outputs the density and color.
+                Both of the input vectors are applied Sinusoidal Positional Encoding (PE) to expand the dimensionality. For the position vector we use 
+                L = 10, and for the viewing direction we use L = 4. The MLP has 8 hidden layers with 256 hidden units and ReLU activation functions, before
+                we split the model into two heads, one for density and one for color. The density head has one linear layer with 1 output unit, and the color head
+                two hidden layers followed by a sigmoid. Since the direction is only used in the color head, we concatenate the position and direction vectors after
+                the model is split. We also inject the position vector (after PE) in the middle of the MLP through concatination, to help the now deep neural network
+                not forget about the input.
+            </p>
+            <h4>Part 2.5: Volume Rendering</h4> 
+            <p>
+                The actual color of a pixel is calculated by integrating the color and density along the ray. This is done by using the volume rendering equation:
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                      <mover>
+                        <mi>C</mi>
+                        <mo>^</mo>
+                      </mover>
+                      <mo>(</mo>
+                      <mi>r</mi>
+                      <mo>)</mo>
+                      <mo>=</mo>
+                      <munderover>
+                        <mo>&#x2211;</mo>
+                        <mi>i=1</mi>
+                        <mi>N</mi>
+                      </munderover>
+                      <mrow>
+                        <msub>
+                          <mi>T</mi>
+                          <mi>i</mi>
+                        </msub>
+                        <mo>(</mo>
+                        <mn>1</mn>
+                        <mo>-</mo>
+                        <mrow>
+                          <mo>exp</mo>
+                          <mo>(</mo>
+                          <mo>-</mo>
+                          <msub>
+                            <mi>&sigma;</mi>
+                            <mi>i</mi>
+                          </msub>
+                          <msub>
+                            <mi>&delta;</mi>
+                            <mi>i</mi>
+                          </msub>
+                          <mo>)</mo>
+                        </mrow>
+                        <mo>)</mo>
+                        <msub>
+                          <mi>c</mi>
+                          <mi>i</mi>
+                        </msub>
+                        <mo>,</mo>
+                      </mrow>
+                      <mo>&#xA0;</mo>
+                      <mi>where</mi>
+                      <mo>&#xA0;</mo>
+                      <msub>
+                        <mi>T</mi>
+                        <mi>i</mi>
+                      </msub>
+                      <mo>=</mo>
+                      <mrow>
+                        <mo>exp</mo>
+                        <mo>(</mo>
+                        <mo>-</mo>
+                        <munderover>
+                          <mo>&#x2211;</mo>
+                          <mi>j=1</mi>
+                          <mrow>
+                            <mi>i</mi>
+                            <mo>-</mo>
+                            <mn>1</mn>
+                          </mrow>
+                        </munderover>
+                        <msub>
+                          <mi>&sigma;</mi>
+                          <mi>j</mi>
+                        </msub>
+                        <msub>
+                          <mi>&delta;</mi>
+                          <mi>j</mi>
+                        </msub>
+                        <mo>)</mo>
+                      </mrow>
+                    </mrow>
+                  </math>
+                This rendered color is what we want to compare with the actual color of the pixel. We do this by using the mean squared error loss function.
+            </p>
+            <h4>Results:</h4>
+            <p>
+                Below is a visulization of the rays and samples drawn at a single training step. In the actual training step, I used a batch size of 10000,
+                but to make the visualization less drowded, I only show 100 rays and samples. 
+            </p>
+            <figure style="display: inline-block; width: 70%; margin: 0 1%;">
+              <img src="Images/100_rays.png" alt="picture" style="width: 100%; height: auto;">
+              <figcaption>Image of 100 rays sampled in the training process.</figcaption>
+          </figure>
+          <p>
+            Here is the result from the training process on one of the training images every 50 iteration up to 350 iterations. 
+            The PSNR on the training and validation data is also shown.
+          </p>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_0.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption></figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_50.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption></figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_100.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption></figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_150.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption></figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_200.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption></figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_250.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption></figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_300.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption></figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_350.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption></figcaption>
+            </figure>
+            <figure style="display: inline-block; width: 30%; margin: 0 1%;">
+                <img src="Images/training_val_PSNR.png" alt="picture" style="width: 100%; height: auto;">
+                <figcaption>PSNR on both the training and validation data.</figcaption>
+            </figure>
+            <p>As expected, the images generated look more and more like the actual image the later in the training process we are.
+                The most suprising result is that the PSNR on the validation data is just as good, and even slightly better, than the PSNR on the training data.
+                This suggests that the model is not overfitting, and that the model is generalizing well to new data.
+            </p>
+            <p>Now finally, here is a spherical rendering of the lego using the test set. The videoes are generated after
+                training the model for 400 epochs (training around 7 minutes).
+            </p>
+            <video width="640" height="360" controls>
+                <source src="Images/render_400.MP4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <h4>Bells & Whistles:</h4> 
+            <p>
+              For Bells & Whistles, I decide to change the background color by rendering the Volrend function. This is done by
+              picking the last sample for each cumulative transmittance along a ray. If the value on this is high, it means that 
+              a lot of light reamains unabsorbed, and we can therefore assume that the ray has not hit anything. Therefore we can simply 
+              add T_final*background color to the rendered colors, as this will not affect pixels that have hit an object (since T_final is close to 0).
+              The resulting video with a different background color is shown below:
+            </p>
+            <video width="640" height="360" controls>
+              <source src="Images/render_diff_color.MP4" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+    </main>
+</body>
+</html>
