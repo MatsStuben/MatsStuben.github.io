@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mats Stuben – Portfolio</title>
+    <title>Mats Wiig Martinussen – Portfolio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
         body {
@@ -38,6 +38,21 @@
         @media (max-width: 700px) {
             .sections { grid-template-columns: 1fr; }
         }
+        /* Tabs */
+        .tabs { max-width: 900px; margin: 0 auto 16px auto; display: flex; gap: 8px; flex-wrap: wrap; }
+        .tab-button {
+            background: white;
+            border: 1px solid #e1e5ea;
+            color: #2c3e50;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .tab-button.active { background: #2c3e50; color: #fff; border-color: #2c3e50; }
+        .tab-panel { display: none; max-width: 900px; margin: 0 auto; }
+        .tab-panel.active { display: block; }
+        .panel-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -46,31 +61,68 @@
         <div class="subtitle">Portfolio</div>
     </header>
 
-    <div class="sections">
-        <div class="card">
-            <a href="./cv/index.html">Computer Vision Portfolio →</a>
-            <p>Projects from CS/ML courses and research: filtering, morphing, mosaics, diffusion, NeRF, and more.</p>
+    <nav class="tabs" role="tablist" aria-label="Portfolio Sections">
+        <button class="tab-button active" role="tab" aria-selected="true" aria-controls="tab-cv" id="btn-cv">Computer Vision</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-revenue" id="btn-revenue">Current Project: Revenue Estimation</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-llm" id="btn-llm">Next Project: LLM Agent Fantasy</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-linkedin" id="btn-linkedin">LinkedIn</button>
+    </nav>
+
+    <section id="tab-cv" class="tab-panel active" role="tabpanel" aria-labelledby="btn-cv">
+        <div class="panel-card">
+            <h2>Computer Vision Portfolio</h2>
+            <p>Projects from CV/ML courses and research: filtering, morphing, mosaics, diffusion, NeRF, and GAN/Diffusion Hybrid.</p>
+            <p><a href="./cv/index.html">Open CV Portfolio →</a></p>
         </div>
-        <div class="card">
-            <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">Resume / LinkedIn →</a>
-            <p>Experience, education, and highlights.</p>
+    </section>
+
+    <section id="tab-revenue" class="tab-panel" role="tabpanel" aria-labelledby="btn-revenue">
+        <div class="panel-card">
+            <h2>Current Project: Revenue Estimation</h2>
+            <p>Exploring data pipelines and modeling approaches for estimating revenue with limited historical signals. Details and write‑up coming soon.</p>
         </div>
-        <div class="card">
-            <a href="#projects">Selected Projects →</a>
-            <p>Non‑CV projects and experiments.</p>
+    </section>
+
+    <section id="tab-llm" class="tab-panel" role="tabpanel" aria-labelledby="btn-llm">
+        <div class="panel-card">
+            <h2>Next Project: LLM Agent Fantasy</h2>
+            <p>Designing an autonomous agent for fantasy roster decisions using tool‑augmented LLMs, retrieval over stats, and simulation. Preview coming soon.</p>
         </div>
-        <div class="card">
-            <a href="mailto:you@example.com">Contact →</a>
-            <p>Get in touch.</p>
+    </section>
+
+    <section id="tab-linkedin" class="tab-panel" role="tabpanel" aria-labelledby="btn-linkedin">
+        <div class="panel-card">
+            <h2>LinkedIn</h2>
+            <p><a href="https://www.linkedin.com/in/mats-wiig-martinussen" target="_blank" rel="noopener noreferrer">Visit my LinkedIn profile →</a></p>
         </div>
-    </div>
+    </section>
 
     <div class="footer">
-        © <span id="year"></span> Mats Stuben
+        © <span id="year"></span> Mats Wiig Martinussen
     </div>
 
     <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+    
+    const buttons = [
+        { btn: document.getElementById('btn-cv'), panel: document.getElementById('tab-cv') },
+        { btn: document.getElementById('btn-revenue'), panel: document.getElementById('tab-revenue') },
+        { btn: document.getElementById('btn-llm'), panel: document.getElementById('tab-llm') },
+        { btn: document.getElementById('btn-linkedin'), panel: document.getElementById('tab-linkedin') }
+    ];
+    
+    function showPanel(index) {
+        buttons.forEach((entry, i) => {
+            const isActive = i === index;
+            entry.btn.classList.toggle('active', isActive);
+            entry.btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            entry.panel.classList.toggle('active', isActive);
+        });
+    }
+    
+    buttons.forEach((entry, index) => {
+        entry.btn.addEventListener('click', () => showPanel(index));
+    });
     </script>
 </body>
 </html>
